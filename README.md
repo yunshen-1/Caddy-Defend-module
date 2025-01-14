@@ -86,7 +86,7 @@ defender <ip_ranges...> <responder> [responder_args...]
 Block requests from specific IP ranges:
 ```caddyfile
 localhost:8080 {
-    defender 203.0.113.0/24 198.51.100.0/24 block
+    defender 203.0.113.0/24 openai 198.51.100.0/24 block
     respond "Hello, world!"
 }
 ```
