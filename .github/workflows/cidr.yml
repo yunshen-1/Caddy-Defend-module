@@ -19,7 +19,7 @@ jobs:
 
       - name: Run CLI to generate Go file
         run: |
-          go run ranges/main.go -format go -output ranges/generated.go
+          go run ranges/main.go -format go -output ranges/data/generated.go
 
       - name: Commit and push changes
         run: |
