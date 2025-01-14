@@ -123,83 +123,16 @@ The plugin includes predefined IP ranges for popular AI services. These ranges a
 
 More are welcome! for a precompiled list, see the [embedded results](ranges/data/generated.go)
 
----
-
-## **GitHub Pages Documentation**
-
-To host the documentation on GitHub Pages:
-
-1. **Create a `docs` Folder**:
-   Add a `docs` folder to your repository with an `index.md` file:
-   ```
-   caddy-defender/
-   ├── docs/
-   │   └── index.md
-   └── ...
-   ```
-
-2. **Write the Documentation**:
-   Copy the content of this README into `docs/index.md`.
-
-3. **Enable GitHub Pages**:
-   - Go to your repository's **Settings**.
-   - Scroll down to the **Pages** section.
-   - Set the source to the `docs` folder and save.
-
-4. **Access the Documentation**:
-   Your documentation will be available at:
-   ```
-   https://<username>.github.io/caddy-defender/
-   ```
-
----
-
 ## **Contributing**
 
 We welcome contributions! Here’s how you can get started:
 
-### **Setting Up the Development Environment**
+### Adding New IP Ranges
+To add new IP ranges, you need to create a new fetcher in the `ranges/fetchers` package. Follow the steps in the [Contributing Guide](CONTRIBUTING.md).
 
-1. **Fork the Repository**:
-   Fork the repository to your GitHub account.
+### Adding a New Responder
 
-2. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/<your-username>/caddy-defender.git
-   cd caddy-defender
-   ```
-
-3. **Build the Plugin**:
-   Use `xcaddy` to build Caddy with the plugin:
-   ```bash
-   xcaddy build --with github.com/jasonlovesdoggo/caddy-defender
-   ```
-
-4. **Run Tests**:
-   Add tests for your changes and run them:
-   ```bash
-   go test ./...
-   ```
-
-### **Submitting a Pull Request**
-
-1. **Create a New Branch**:
-   ```bash
-   git checkout -b my-feature
-   ```
-
-2. **Commit Your Changes**:
-   ```bash
-   git commit -m "Add my feature"
-   ```
-
-3. **Push to GitHub**:
-   ```bash
-   git push origin my-feature
-   ```
-
-4. **Open a Pull Request**:
-   Go to the repository on GitHub and open a pull request. Describe your changes and reference any related issues.
+To add a new responder, you need to create a new responder in the `responders` package and update the `UnmarshalCaddyfile` method in the `DefenderMiddleware` struct to handle the new responder. Follow the steps in the [Contributing Guide](CONTRIBUTING.md).
 
 ---
 
@@ -211,7 +144,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## **Acknowledgments**
 
-- Inspired by the need to protect against unwanted AI traffic.
+- [This reddit post](https://www.reddit.com/r/selfhosted/comments/1i154h7/comment/m73pj9t/).
 - Built with ❤️ using [Caddy](https://caddyserver.com).
 
 ---
