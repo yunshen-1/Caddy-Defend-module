@@ -10,7 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          persist-credentials: false
 
       - name: Set up Go
         uses: actions/setup-go@v3
@@ -21,10 +24,14 @@ jobs:
         run: |
           go run ranges/main.go -format go -output ranges/data/generated.go
 
-      - name: Commit and push changes
+      - name: Commit files
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add ranges/data/generated.go
-          git commit -m "Automated update of IP ranges"
-          git push
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "chore: Update AI's CIDR"
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
