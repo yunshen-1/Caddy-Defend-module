@@ -5,10 +5,10 @@
 }
 
 :80 {
-    defender garbage {
+    defender custom "wow this is so good" {
         ranges 127.0.0.0/8
     }
-    respond "This is HTTP, no redirect!"
+    respond "This is what a human sees"
 }
 
 

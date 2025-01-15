@@ -89,8 +89,10 @@ Block requests from specific IP ranges:
     order defender before basicauth
 }
 localhost:8080 {
-    defender block  203.0.113.0/24 openai 198.51.100.0/24 
-    respond "Hello, world!"
+    defender block {
+        range 203.0.113.0/24 openai 198.51.100.0/24 
+    } 
+    respond "Hello, world!" # what humans see
 }
 ```
 
@@ -101,8 +103,10 @@ Return garbage data for requests from specific IP ranges:
     order defender before basicauth
 }
 localhost:8081 {
-    defender garbage  192.168.1.0/24
-    respond "Hello, world!"
+    defender garbage {
+        range 192.168.0.0/24 
+    }
+    respond "Hello, world!" # what humans see
 }
 ```
 
@@ -113,9 +117,11 @@ Return a custom message for requests from specific IP ranges:
     order defender before basicauth
 }
 localhost:8082 {
-    defender custom "Custom response message"  10.0.0.0/8 
-    respond "Hello, world!"
-}
+    defender custom "Custom response message" {
+        range 10.0.0.0/8
+    } 
+    respond "Hello, world!" # what humans see
+} 
 ```
 
 ---
