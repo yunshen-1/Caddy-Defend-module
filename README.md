@@ -159,7 +159,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## **Acknowledgments**
 
-- [This reddit post](https://www.reddit.com/r/selfhosted/comments/1i154h7/comment/m73pj9t/).
+- [The inspiration for this project](https://www.reddit.com/r/selfhosted/comments/1i154h7/comment/m73pj9t/).
 - Built with ❤️ using [Caddy](https://caddyserver.com).
 
 ---
