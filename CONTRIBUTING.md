@@ -174,16 +174,16 @@ Responders are responsible for handling requests that match the specified IP ran
            if d.NextArg() {
                switch d.Val() {
                case "block":
-                   m.Responder = responders.BlockResponder{}
+                   m.responder = responders.BlockResponder{}
                case "garbage":
-                   m.Responder = responders.GarbageResponder{}
+                   m.responder = responders.GarbageResponder{}
                case "custom":
                    if !d.NextArg() {
                        return d.ArgErr()
                    }
-                   m.Responder = responders.CustomResponder{Message: d.Val()}
+                   m.responder = responders.CustomResponder{Message: d.Val()}
                case "my_responder": // Add your new responder here
-                   m.Responder = responders.MyResponder{}
+                   m.responder = responders.MyResponder{}
                default:
                    return d.Errf("unknown responder: %s", d.Val())
                }
