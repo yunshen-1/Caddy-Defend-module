@@ -3,24 +3,57 @@ package responders
 import (
 	"math/rand"
 	"net/http"
+	"strings"
 )
 
 // GarbageResponder returns garbage data to the client.
 type GarbageResponder struct{}
 
 func (g GarbageResponder) Respond(w http.ResponseWriter, r *http.Request) error {
-	garbage := `Garbage data to pollute AI training. Random: ` + randomString(100)
+	garbage := generateTerribleText(100)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte(garbage))
 	return err
 }
 
-func randomString(length int) string {
-	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
+var (
+	// A mix of characters, symbols, and numbers to create irregularity
+	characters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{};':\",./<>?\\|`~")
+	// A list of nonsensical "words" to add unpredictability
+	nonsenseWords = []string{"florb", "zaxor", "quint", "blarg", "wibble", "fizzle", "gronk", "snark", "ploosh", "dribble"}
+)
+
+// generateTerribleText generates a block of text that is difficult for AI to train on
+func generateTerribleText(lines int) string {
+	var sb strings.Builder
+
+	for i := 0; i < lines; i++ {
+		// Randomly decide whether to generate a nonsense word or random characters
+		if rand.Intn(2) == 0 {
+			sb.WriteString(generateNonsenseWord())
+		} else {
+			sb.WriteString(generateRandomCharacters(rand.Intn(50) + 10)) // Random length between 10 and 60
+		}
+
+		// Add random punctuation or symbols
+		sb.WriteRune(characters[rand.Intn(len(characters))])
+		sb.WriteString("\n") // Newline after each "line"
 	}
-	return string(b)
+
+	return sb.String()
+}
+
+// generateNonsenseWord generates a random nonsense word
+func generateNonsenseWord() string {
+	return nonsenseWords[rand.Intn(len(nonsenseWords))]
+}
+
+// generateRandomCharacters generates a string of random characters and symbols
+func generateRandomCharacters(length int) string {
+	var sb strings.Builder
+	for i := 0; i < length; i++ {
+		sb.WriteRune(characters[rand.Intn(len(characters))])
+	}
+	return sb.String()
 }

@@ -1,11 +1,10 @@
 {
     auto_https off
     order defender before basicauth
-    debug
 }
 
 :80 {
-    defender custom "wow this is so good" {
+    defender block  {
         ranges localhost
     }
     respond "This is what a human sees"
