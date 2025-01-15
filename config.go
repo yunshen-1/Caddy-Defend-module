@@ -3,6 +3,7 @@ package caddydefender
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
 	"github.com/jasonlovesdoggo/caddy-defender/responders"
 	"net"
 
@@ -123,6 +124,13 @@ func (m *DefenderMiddleware) Validate() error {
 	}
 
 	for _, ipRange := range m.AdditionalRanges {
+		// Check if the range is a predefined key (e.g., "openai")
+		if _, ok := data.IPRanges[ipRange]; ok {
+			// If it's a predefined key, skip CIDR validation
+			continue
+		}
+
+		// Otherwise, treat it as a custom CIDR and validate it
 		_, _, err := net.ParseCIDR(ipRange)
 		if err != nil {
 			return fmt.Errorf("invalid IP range %q: %v", ipRange, err)

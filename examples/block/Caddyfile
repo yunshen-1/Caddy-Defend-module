@@ -6,7 +6,7 @@
 
 :80 {
     defender custom "wow this is so good" {
-        ranges 127.0.0.0/8
+        ranges localhost
     }
     respond "This is what a human sees"
 }

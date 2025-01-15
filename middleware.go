@@ -2,7 +2,6 @@ package caddydefender
 
 import (
 	"fmt"
-	"github.com/caddyserver/caddy/v2"
 	"go.uber.org/zap"
 	"net"
 	"net/http"
@@ -27,30 +26,30 @@ func (m DefenderMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request, ne
 		return caddyhttp.Error(http.StatusForbidden, fmt.Errorf("invalid client IP"))
 	}
 
-	// Check if the client IP is in any of the embedded ranges
-	for _, ranges := range data.IPRanges {
-		for _, cidr := range ranges {
+	// Check if the client IP is in any of the additional ranges
+	for _, cidr := range m.AdditionalRanges {
+		// If the range is a predefined key (e.g., "openai"), use the corresponding CIDRs
+		if ranges, ok := data.IPRanges[cidr]; ok {
+			for _, predefinedCIDR := range ranges {
+				_, ipNet, err := net.ParseCIDR(predefinedCIDR)
+				if err != nil {
+					m.log.Error(fmt.Sprintf("Invalid predefined CIDR: %v", err))
+					continue
+				}
+				if ipNet.Contains(clientIP) {
+					return m.responder.Respond(w, r)
+				}
+			}
+		} else {
+			// Otherwise, treat it as a custom CIDR
 			_, ipNet, err := net.ParseCIDR(cidr)
 			if err != nil {
-				caddy.Log().Error(fmt.Sprintf("Invalid CIDR: %v", err))
+				m.log.Error(fmt.Sprintf("Invalid CIDR: %v", err))
 				continue
 			}
 			if ipNet.Contains(clientIP) {
 				return m.responder.Respond(w, r)
 			}
-		}
-	}
-
-	// Check if the client IP is in any of the additional ranges
-	for _, cidr := range m.AdditionalRanges {
-		_, ipNet, err := net.ParseCIDR(cidr)
-		if err != nil {
-			caddy.Log().Error(fmt.Sprintf("Invalid CIDR: %v", err))
-			continue
-		}
-
-		if ipNet.Contains(clientIP) {
-			return m.responder.Respond(w, r)
 		}
 	}
 
