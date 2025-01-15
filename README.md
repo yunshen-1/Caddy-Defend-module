@@ -71,7 +71,7 @@ If you prefer to build the plugin manually:
 ### **Caddyfile Syntax**
 
 ```caddyfile
-defender <ip_ranges...> <responder> [responder_args...]
+defender <responder> [responder_args...] <ip_ranges...>
 ```
 
 - `<ip_ranges...>`: A list of CIDR ranges to match against the client's IP.
@@ -85,8 +85,11 @@ defender <ip_ranges...> <responder> [responder_args...]
 #### **Block Requests**
 Block requests from specific IP ranges:
 ```caddyfile
+{
+    order defender before basicauth
+}
 localhost:8080 {
-    defender 203.0.113.0/24 openai 198.51.100.0/24 block
+    defender block  203.0.113.0/24 openai 198.51.100.0/24 
     respond "Hello, world!"
 }
 ```
@@ -94,8 +97,11 @@ localhost:8080 {
 #### **Return Garbage Data**
 Return garbage data for requests from specific IP ranges:
 ```caddyfile
+{
+    order defender before basicauth
+}
 localhost:8081 {
-    defender 192.168.1.0/24 garbage
+    defender garbage  192.168.1.0/24
     respond "Hello, world!"
 }
 ```
@@ -103,8 +109,11 @@ localhost:8081 {
 #### **Custom Response**
 Return a custom message for requests from specific IP ranges:
 ```caddyfile
+{
+    order defender before basicauth
+}
 localhost:8082 {
-    defender 10.0.0.0/8 custom "Custom response message"
+    defender custom "Custom response message"  10.0.0.0/8 
     respond "Hello, world!"
 }
 ```

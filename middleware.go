@@ -3,6 +3,7 @@ package caddydefender
 import (
 	"fmt"
 	"github.com/caddyserver/caddy/v2"
+	"go.uber.org/zap"
 	"net"
 	"net/http"
 
@@ -12,8 +13,17 @@ import (
 
 // ServeHTTP implements the middleware logic.
 func (m DefenderMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-	clientIP := net.ParseIP(r.RemoteAddr)
+	// Split the RemoteAddr into IP and port
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		m.log.Error("Invalid client IP format", zap.String("ip", r.RemoteAddr))
+		return caddyhttp.Error(http.StatusForbidden, fmt.Errorf("invalid client IP format"))
+	}
+
+	clientIP := net.ParseIP(host)
+	m.log.Debug("client IP", zap.String("ip", clientIP.String()))
 	if clientIP == nil {
+		m.log.Error("Invalid client IP", zap.String("ip", host))
 		return caddyhttp.Error(http.StatusForbidden, fmt.Errorf("invalid client IP"))
 	}
 
@@ -26,7 +36,7 @@ func (m DefenderMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request, ne
 				continue
 			}
 			if ipNet.Contains(clientIP) {
-				return m.Responder.Respond(w, r)
+				return m.responder.Respond(w, r)
 			}
 		}
 	}
@@ -38,8 +48,9 @@ func (m DefenderMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request, ne
 			caddy.Log().Error(fmt.Sprintf("Invalid CIDR: %v", err))
 			continue
 		}
+
 		if ipNet.Contains(clientIP) {
-			return m.Responder.Respond(w, r)
+			return m.responder.Respond(w, r)
 		}
 	}
 

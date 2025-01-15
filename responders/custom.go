@@ -6,7 +6,7 @@ import (
 
 // CustomResponder returns a custom response.
 type CustomResponder struct {
-	Message string
+	Message string `json:"message"`
 }
 
 func (c CustomResponder) Respond(w http.ResponseWriter, r *http.Request) error {

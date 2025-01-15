@@ -1,19 +1,18 @@
-localhost:8080 {
-    defender 203.0.113.0/24 198.51.100.0/24 block
-    respond "Hello, world!"
-}
-
-localhost:8081 {
-    defender 192.168.1.0/24 garbage
-    respond "Hello, world!"
-}
-
-localhost:8082 {
-    defender 10.0.0.0/8 custom "Custom response message"
-    respond "Hello, world!"
+{
+    auto_https off
+    order defender before basicauth
+    debug
 }
 
 :80 {
-    defender 127.0.0.0/8 garbage
-
+    defender garbage {
+        ranges 127.0.0.0/8
+    }
+    respond "This is HTTP, no redirect!"
 }
+
+
+:83 {
+    respond "Clear text HTTP"
+}
+
