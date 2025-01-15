@@ -42,9 +42,6 @@ func (f GithubCopilotFetcher) FetchIPRanges() ([]string, error) {
 		return nil, fmt.Errorf("no 'copilot' key found in GitHub Copilot response")
 	}
 
-	// Log the value of the "copilot" key for debugging
-	fmt.Printf("Value of 'copilot' key: %v (Type: %T)\n", copilotValue, copilotValue)
-
 	// Convert the copilot value to a []interface{}
 	copilotRangesInterface, ok := copilotValue.([]interface{})
 	if !ok {
