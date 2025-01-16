@@ -72,7 +72,7 @@ func (f AzurePublicCloudFetcher) FetchIPRanges() ([]string, error) {
 	}
 
 	// Step 5: Filter out the "Public" cloud IPs
-	publicIPs := []string{}
+	var publicIPs []string
 	for _, value := range ipRanges.Values {
 		if strings.EqualFold(value.Properties.Platform, "Azure") && strings.EqualFold(value.Properties.SystemService, "ActionGroup") {
 			publicIPs = append(publicIPs, value.Properties.AddressPrefixes...)
