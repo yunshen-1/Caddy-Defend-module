@@ -130,11 +130,13 @@ localhost:8082 {
 
 The plugin includes predefined IP ranges for popular AI services. These ranges are embedded in the binary and can be used without additional configuration.
 
-| Service         | IP Ranges                                  |
-|-----------------|--------------------------------------------|
-| OpenAI          | [openai.go](ranges/fetchers/openai.go)     |
-| DeepSeek        | [deepseek.go](ranges/fetchers/deepseek.go) |
-| GitHub Copilot  | [github.go](ranges/fetchers/github.go)     |
+| Service             | IP Ranges                                    |
+|---------------------|----------------------------------------------|
+| OpenAI              | [openai.go](ranges/fetchers/openai.go)       |
+| DeepSeek            | [deepseek.go](ranges/fetchers/deepseek.go)   |
+| GitHub Copilot      | [github.go](ranges/fetchers/github.go)       |
+| Microsoft Azure     | [azure.go](ranges/fetchers/azure.go)         |
+| Localhost (testing) | [localhost.go](ranges/fetchers/localhost.go) |
 
 More are welcome! for a precompiled list, see the [embedded results](ranges/data/generated.go)
 

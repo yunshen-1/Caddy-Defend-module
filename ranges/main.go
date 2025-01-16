@@ -29,6 +29,7 @@ func main() {
 		fetchers.DeepSeekFetcher{},
 		fetchers.GithubCopilotFetcher{},
 		fetchers.AzurePublicCloudFetcher{},
+		fetchers.LocalhostFetcher{},
 	}
 
 	// Create a map to hold the IP ranges

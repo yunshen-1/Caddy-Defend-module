@@ -33,8 +33,21 @@ var (
 // Mock logger for testing
 var testLogger = zap.NewNop()
 
-// TestRawIPInRanges tests the rawIPInRanges function.
 func TestRawIPInRanges(t *testing.T) {
+	// Mock predefined CIDRs
+	originalIPRanges := data.IPRanges
+
+	// Restore the original data.IPRanges map after the test
+	defer func() {
+		data.IPRanges = originalIPRanges
+	}()
+	data.IPRanges = map[string][]string{
+		"openai": {
+			"203.0.113.0/24",
+			"2001:db8:1::/48",
+		},
+	}
+
 	tests := []struct {
 		name       string
 		ip         string
@@ -90,9 +103,6 @@ func TestRawIPInRanges(t *testing.T) {
 			clientIP := net.ParseIP(tt.ip)
 			assert.NotNil(t, clientIP, "Failed to parse IP")
 
-			// Mock predefined CIDRs
-			data.IPRanges = predefinedCIDRs
-
 			result := rawIPInRanges(clientIP, tt.cidrRanges, testLogger)
 			assert.Equal(t, tt.expected, result, "Unexpected result for IP %s", tt.ip)
 		})
@@ -126,9 +136,6 @@ func TestIPInRanges(t *testing.T) {
 			clientIP := net.ParseIP(tt.ip)
 			assert.NotNil(t, clientIP, "Failed to parse IP")
 
-			// Mock predefined CIDRs
-			data.IPRanges = predefinedCIDRs
-
 			// First call (not cached)
 			result := IPInRanges(clientIP, tt.cidrRanges, testLogger)
 			assert.Equal(t, tt.expected, result, "Unexpected result for IP %s (first call)", tt.ip)
@@ -148,9 +155,6 @@ func TestIPInRangesCacheExpiration(t *testing.T) {
 	clientIP := net.ParseIP("192.168.1.100")
 	assert.NotNil(t, clientIP, "Failed to parse IP")
 
-	// Mock predefined CIDRs
-	data.IPRanges = predefinedCIDRs
-
 	// First call (not cached)
 	result := IPInRanges(clientIP, validCIDRs, testLogger)
 	assert.True(t, result, "Expected IP to be in range (first call)")
@@ -161,4 +165,58 @@ func TestIPInRangesCacheExpiration(t *testing.T) {
 	// Second call (cache expired)
 	result = IPInRanges(clientIP, validCIDRs, testLogger)
 	assert.True(t, result, "Expected IP to be in range (second call, cache expired)")
+}
+
+func TestLocalhostRanges(t *testing.T) {
+	// Mock the data.IPRanges map to include the "localhost" range
+	originalIPRanges := data.IPRanges
+
+	// Restore the original data.IPRanges map after the test
+	defer func() {
+		data.IPRanges = originalIPRanges
+	}()
+	data.IPRanges = map[string][]string{
+		"localhost": {
+			"127.0.0.0/8", // IPv4 localhost range
+			"::1/128",     // IPv6 localhost range
+		},
+	}
+
+	tests := []struct {
+		name     string
+		ip       string
+		expected bool
+	}{
+		{
+			name:     "IPv4 localhost",
+			ip:       "127.0.0.1",
+			expected: true,
+		},
+		{
+			name:     "IPv4 non-localhost",
+			ip:       "192.168.1.1",
+			expected: false,
+		},
+		{
+			name:     "IPv6 localhost",
+			ip:       "::1",
+			expected: true,
+		},
+		{
+			name:     "IPv6 non-localhost",
+			ip:       "2001:db8::1",
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			clientIP := net.ParseIP(tt.ip)
+			assert.NotNil(t, clientIP, "Failed to parse IP")
+
+			// Pass "localhost" as the CIDR range to check
+			result := rawIPInRanges(clientIP, []string{"localhost"}, testLogger)
+			assert.Equal(t, tt.expected, result, "Unexpected result for IP %s", tt.ip)
+		})
+	}
 }
