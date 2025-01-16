@@ -169,3 +169,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 - [The inspiration for this project](https://www.reddit.com/r/selfhosted/comments/1i154h7/comment/m73pj9t/).
 - Built with ❤️ using [Caddy](https://caddyserver.com).
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=JasonLovesDoggo/caddy-defender&type=Date)](https://star-history.com/#JasonLovesDoggo/caddy-defender&Date)
