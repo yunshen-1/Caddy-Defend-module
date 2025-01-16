@@ -18,9 +18,31 @@ The **Caddy Defender** plugin is a middleware for Caddy that allows you to block
 
 ## **Installation**
 
+### **Using Docker**
+
+The easiest way to use the Caddy Defender plugin is by using the pre-built Docker image.
+
+1. **Pull the Docker Image**:
+   ```bash
+   docker pull ghcr.io/jasonlovesdoggo/caddy-defender:latest
+   ```
+
+2. **Run the Container**:
+   Use the following command to run the container with your `Caddyfile`:
+   ```bash
+   docker run -d \
+     --name caddy \
+     -v /path/to/Caddyfile:/etc/caddy/Caddyfile \
+     -p 80:80 -p 443:443 \
+     ghcr.io/jasonlovesdoggo/caddy-defender:latest
+   ```
+
+   Replace `/path/to/Caddyfile` with the path to your `Caddyfile`.
+---
+
 ### **Using `xcaddy`**
 
-The easiest way to build Caddy with the Caddy Defender plugin is by using [`xcaddy`](https://github.com/caddyserver/xcaddy), a tool for building custom Caddy binaries.
+You can also build Caddy with the Caddy Defender plugin using [`xcaddy`](https://github.com/caddyserver/xcaddy), a tool for building custom Caddy binaries.
 
 1. **Install `xcaddy`**:
    ```bash
@@ -43,40 +65,33 @@ The easiest way to build Caddy with the Caddy Defender plugin is by using [`xcad
 
 ---
 
-### **Manual Build**
-
-If you prefer to build the plugin manually:
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/jasonlovesdoggo/caddy-defender.git
-   cd caddy-defender
-   ```
-
-2. **Build the Plugin**:
-   ```bash
-   go build -o caddy-defender
-   ```
-
-3. **Run Caddy**:
-   Use the built binary to run Caddy:
-   ```bash
-   ./caddy-defender run --config Caddyfile
-   ```
-
----
-
 ## **Configuration**
 
 ### **Caddyfile Syntax**
 
+The `defender` directive is used to configure the Caddy Defender plugin. It has the following syntax:
+
 ```caddyfile
-defender <responder> [responder_args...] <ip_ranges...>
+defender <responder> [responder_args...] {
+    range <ip_ranges...>
+}
 ```
 
-- `<ip_ranges...>`: A list of CIDR ranges to match against the client's IP.
-- `<responder>`: The responder backend to use (`block`, `garbage`, or `custom`).
-- `[responder_args...]`: Additional arguments for the responder backend (e.g., a custom message for the `custom` responder).
+- `<responder>`: The responder backend to use. Supported values are:
+  - `block`: Returns a `403 Forbidden` response.
+  - `garbage`: Returns garbage data to pollute AI training.
+  - `custom`: Returns a custom message (requires `responder_args`).
+- `[responder_args...]`: Additional arguments for the responder backend. For the `custom` responder, this is the custom message to return.
+- `<ip_ranges...>`: A list of CIDR ranges or predefined range keys (e.g., `openai`, `localhost`) to match against the client's IP.
+
+#### **Ordering the Middleware**
+To ensure the `defender` middleware runs before other middleware (e.g., `basicauth`), add the following to your global configuration:
+
+```caddyfile
+{
+    order defender before basicauth
+}
+```
 
 ---
 
@@ -85,9 +100,6 @@ defender <responder> [responder_args...] <ip_ranges...>
 #### **Block Requests**
 Block requests from specific IP ranges:
 ```caddyfile
-{
-    order defender before basicauth
-}
 localhost:8080 {
     defender block {
         range 203.0.113.0/24 openai 198.51.100.0/24 
@@ -99,9 +111,6 @@ localhost:8080 {
 #### **Return Garbage Data**
 Return garbage data for requests from specific IP ranges:
 ```caddyfile
-{
-    order defender before basicauth
-}
 localhost:8081 {
     defender garbage {
         range 192.168.0.0/24 
@@ -113,9 +122,6 @@ localhost:8081 {
 #### **Custom Response**
 Return a custom message for requests from specific IP ranges:
 ```caddyfile
-{
-    order defender before basicauth
-}
 localhost:8082 {
     defender custom "Custom response message" {
         range 10.0.0.0/8
@@ -163,7 +169,3 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 - [The inspiration for this project](https://www.reddit.com/r/selfhosted/comments/1i154h7/comment/m73pj9t/).
 - Built with ❤️ using [Caddy](https://caddyserver.com).
-
----
-
-Let me know if you need further assistance! 😊
