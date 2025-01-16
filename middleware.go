@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
+	"github.com/jasonlovesdoggo/caddy-defender/utils"
 )
 
 // ServeHTTP implements the middleware logic.
@@ -27,30 +27,8 @@ func (m DefenderMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request, ne
 	}
 
 	// Check if the client IP is in any of the additional ranges
-	for _, cidr := range m.AdditionalRanges {
-		// If the range is a predefined key (e.g., "openai"), use the corresponding CIDRs
-		if ranges, ok := data.IPRanges[cidr]; ok {
-			for _, predefinedCIDR := range ranges {
-				_, ipNet, err := net.ParseCIDR(predefinedCIDR)
-				if err != nil {
-					m.log.Error(fmt.Sprintf("Invalid predefined CIDR: %v", err))
-					continue
-				}
-				if ipNet.Contains(clientIP) {
-					return m.responder.Respond(w, r)
-				}
-			}
-		} else {
-			// Otherwise, treat it as a custom CIDR
-			_, ipNet, err := net.ParseCIDR(cidr)
-			if err != nil {
-				m.log.Error(fmt.Sprintf("Invalid CIDR: %v", err))
-				continue
-			}
-			if ipNet.Contains(clientIP) {
-				return m.responder.Respond(w, r)
-			}
-		}
+	if utils.IPInRanges(clientIP, m.AdditionalRanges, m.log) {
+		return m.responder.Respond(w, r)
 	}
 
 	// IP is not in any of the ranges, proceed to the next handler

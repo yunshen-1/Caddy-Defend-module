@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -20,19 +21,40 @@ func (f AzurePublicCloudFetcher) Description() string {
 }
 
 func (f AzurePublicCloudFetcher) FetchIPRanges() ([]string, error) {
-	// https://www.microsoft.com/en-us/download/details.aspx?id=56519
-	const downloadURL = "https://download.microsoft.com/download/7/1/D/71D86715-5596-4529-9B13-DA13A5DE5B63/ServiceTags_Public_20250113.json"
-	resp, err := http.Get(downloadURL)
+	// Step 1: Fetch the download page to get the latest JSON URL
+	downloadPageURL := "https://www.microsoft.com/en-us/download/details.aspx?id=56519"
+	resp, err := http.Get(downloadPageURL)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch Azure Public Cloud IP ranges: %v", err)
+		return nil, fmt.Errorf("failed to fetch Azure download page: %v", err)
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
+		return nil, fmt.Errorf("failed to read Azure download page body: %v", err)
+	}
+
+	// Step 2: Extract the JSON download URL using a regex
+	urlRegex := regexp.MustCompile(`https://download\.microsoft\.com/.*?\.json`)
+	matches := urlRegex.FindStringSubmatch(string(body))
+	if len(matches) == 0 {
+		return nil, fmt.Errorf("failed to find JSON download URL in Azure download page")
+	}
+	jsonDownloadURL := matches[0]
+
+	// Step 3: Fetch the JSON file from the extracted URL
+	resp, err = http.Get(jsonDownloadURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch Azure Public Cloud IP ranges: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, err = io.ReadAll(resp.Body)
+	if err != nil {
 		return nil, fmt.Errorf("failed to read response body from Azure Public Cloud: %v", err)
 	}
 
+	// Step 4: Parse the JSON and extract the IP ranges
 	type AzureIPRanges struct {
 		Values []struct {
 			Name       string `json:"name"`
@@ -49,10 +71,10 @@ func (f AzurePublicCloudFetcher) FetchIPRanges() ([]string, error) {
 		return nil, fmt.Errorf("failed to unmarshal Azure Public Cloud JSON: %v", err)
 	}
 
-	// Filter out the "Public" cloud IPs
-	publicIPs := []string{}
+	// Step 5: Filter out the "Public" cloud IPs
+	var publicIPs []string
 	for _, value := range ipRanges.Values {
-		if (strings.EqualFold(value.Properties.Platform, "Azure")) && (strings.EqualFold(value.Properties.SystemService, "ActionGroup")) {
+		if strings.EqualFold(value.Properties.Platform, "Azure") && strings.EqualFold(value.Properties.SystemService, "ActionGroup") {
 			publicIPs = append(publicIPs, value.Properties.AddressPrefixes...)
 		}
 	}

@@ -16,7 +16,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: '1.23'
 
@@ -29,7 +29,7 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -a -m "chore: Update AI's CIDR"
-          
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
