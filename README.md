@@ -123,7 +123,8 @@ localhost:8081 {
 Return a custom message for requests from specific IP ranges:
 ```caddyfile
 localhost:8082 {
-    defender custom "Custom response message" {
+    defender custom {
+        message "Custom response message"
         range 10.0.0.0/8
     } 
     respond "Hello, world!" # what humans see
