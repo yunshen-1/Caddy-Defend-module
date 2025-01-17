@@ -30,6 +30,7 @@ func main() {
 		fetchers.DeepSeekFetcher{},                // DeepSeek
 		fetchers.GithubCopilotFetcher{},           // GitHub Copilot
 		fetchers.AzurePublicCloudFetcher{},        // Azure Public Cloud
+		fetchers.GCloudFetcher{},                  // Google Cloud Platform
 		aws.AWSFetcher{},                          // Global AWS IP ranges
 		aws.AWSRegionFetcher{Region: "us-east-1"}, // us-east-1 region
 		aws.AWSRegionFetcher{Region: "us-west-1"}, // us-west-1 region
