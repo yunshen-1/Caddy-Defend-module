@@ -20,23 +20,36 @@ func init() {
 }
 
 // Defender implements an HTTP middleware that enforces IP-based rules to protect your site from AIs/Scrapers.
+// It allows you to block or manipulate requests based on the client's IP address by specifying IP ranges to block
+// or using predefined ranges for popular services like AWS, GCP, OpenAI, and GitHub Copilot.
+//
+// The middleware supports multiple responder types, including blocking requests, returning garbage data, or
+// sending custom messages.
 type Defender struct {
-	// Additional IP ranges specified by the user to block. (optional)
+	// AdditionalRanges specifies additional IP ranges provided by the user to block or manipulate.
+	// These ranges are in CIDR notation (e.g., "192.168.1.0/24") and are applied alongside predefined ranges.
+	// This field is optional.
 	AdditionalRanges []string `json:"additional_ranges,omitempty"`
 
-	// specifies the path to a file containing IP ranges (one per line) to act on. (optional)
+	// RangesFile specifies the path to a file containing IP ranges (one per line) to block or manipulate.
+	// The file can include CIDR ranges or predefined range keys (e.g., "aws", "gcloud").
+	// This field is optional.
 	RangesFile string `json:"ranges_file,omitempty"`
 
-	// Custom message to return to the client when using "custom" middleware (optional)
+	// Message specifies a custom message to return to the client when using the "custom" responder.
+	// This field is optional and only used when the responder type is set to "custom".
 	Message string `json:"message,omitempty"`
 
-	// Internal field representing the actual responder interface
+	// RawResponder is an internal field that represents the responder type specified in the configuration.
+	// Supported values are "block", "garbage", and "custom".
+	// This field is optional and is used during configuration unmarshaling.
 	RawResponder string `json:"raw_responder,omitempty"`
 
-	//  the type of responder to use. (e.g. "block", "custom", etc.)
+	// responder is the internal responder interface used to handle requests that match the specified IP ranges.
+	// It is set based on the value of RawResponder during configuration validation.
 	responder Responder
 
-	// Logger
+	// log is the logger used for logging debug and error messages within the middleware.
 	log *zap.Logger
 }
 
