@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers"
+	"github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers/aws"
 	"log"
 	"os"
 	"strings"
@@ -25,10 +26,14 @@ func main() {
 
 	// Create an array of all IP range fetchers
 	fetchersList := []fetchers.IPRangeFetcher{
-		fetchers.OpenAIFetcher{},
-		fetchers.DeepSeekFetcher{},
-		fetchers.GithubCopilotFetcher{},
-		fetchers.AzurePublicCloudFetcher{},
+		fetchers.OpenAIFetcher{},                  // OpenAI services
+		fetchers.DeepSeekFetcher{},                // DeepSeek
+		fetchers.GithubCopilotFetcher{},           // GitHub Copilot
+		fetchers.AzurePublicCloudFetcher{},        // Azure Public Cloud
+		aws.AWSFetcher{},                          // Global AWS IP ranges
+		aws.AWSRegionFetcher{Region: "us-east-1"}, // us-east-1 region
+		aws.AWSRegionFetcher{Region: "us-west-1"}, // us-west-1 region
+		aws.AWSRegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
 		fetchers.LocalhostFetcher{},
 	}
 
