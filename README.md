@@ -72,7 +72,8 @@ You can also build Caddy with the Caddy Defender plugin using [`xcaddy`](https:/
 The `defender` directive is used to configure the Caddy Defender plugin. It has the following syntax:
 
 ```caddyfile
-defender <responder> [responder_args...] {
+defender <responder> {
+    message <custom message>
     range <ip_ranges...>
 }
 ```
@@ -81,9 +82,8 @@ defender <responder> [responder_args...] {
   - `block`: Returns a `403 Forbidden` response.
   - `garbage`: Returns garbage data to pollute AI training.
   - `custom`: Returns a custom message (requires `responder_args`).
-- `[responder_args...]`: Additional arguments for the responder backend. For the `custom` responder, this is the custom message to return.
 - `<ip_ranges...>`: A list of CIDR ranges or predefined range keys (e.g., `openai`, `localhost`) to match against the client's IP.
-
+- `<custom message>`: A custom message to return when using the `custom` responder.
 #### **Ordering the Middleware**
 To ensure the `defender` middleware runs before other middleware (e.g., `basicauth`), add the following to your global configuration:
 
@@ -155,7 +155,7 @@ To add new IP ranges, you need to create a new fetcher in the `ranges/fetchers` 
 
 ### Adding a New Responder
 
-To add a new responder, you need to create a new responder in the `responders` package and update the `UnmarshalCaddyfile` method in the `DefenderMiddleware` struct to handle the new responder. Follow the steps in the [Contributing Guide](CONTRIBUTING.md).
+To add a new responder, you need to create a new responder in the `responders` package and update the `UnmarshalCaddyfile` method in the `Defender` struct to handle the new responder. Follow the steps in the [Contributing Guide](CONTRIBUTING.md).
 
 ---
 

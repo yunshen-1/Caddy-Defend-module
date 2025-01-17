@@ -53,7 +53,8 @@ func (m *Defender) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			if !d.NextArg() {
 				return d.ArgErr()
 			}
-			m.Message = d.Val()
+			Message := d.Val()
+			m.Message = Message
 		default:
 			return d.Errf("unknown subdirective '%s'", d.Val())
 		}
@@ -80,9 +81,12 @@ func (m *Defender) UnmarshalJSON(b []byte) error {
 	case "garbage":
 		m.responder = &responders.GarbageResponder{}
 	case "custom":
-		var customResp responders.CustomResponder
-		customResp.Message = &m.Message
-		m.responder = &customResp
+		// Get the custom message
+		m.Message = rawConfig.Message
+		m.responder = &responders.CustomResponder{
+			Message: m.Message,
+		}
+
 	default:
 		return fmt.Errorf("unknown responder type: %s", rawConfig.RawResponder)
 	}

@@ -5,8 +5,9 @@
 }
 
 :80 {
-    defender custom "My AI only response"  {
+    defender custom {
         ranges localhost
+        message "You are not welcome here"
     }
     respond "This is what a human sees"
 }
