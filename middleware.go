@@ -26,8 +26,8 @@ func (m Defender) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyht
 		return caddyhttp.Error(http.StatusForbidden, fmt.Errorf("invalid client IP"))
 	}
 
-	// Check if the client IP is in any of the additional ranges
-	if utils.IPInRanges(clientIP, m.AdditionalRanges, m.log) {
+	// Check if the client IP is in any of the additional ranges using the optimized checker
+	if m.ipChecker.IPInRanges(clientIP) {
 		return m.responder.Respond(w, r)
 	}
 

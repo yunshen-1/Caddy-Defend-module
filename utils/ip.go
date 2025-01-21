@@ -1,72 +1,111 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
+	"github.com/gaissmai/bart"
 	"github.com/hashicorp/golang-lru/v2/expirable"
 	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
 	"go.uber.org/zap"
 	"net"
+	"net/netip"
 	"time"
 )
 
 const MaxKeys = 10000
 
-var cache = expirable.NewLRU[string, bool](MaxKeys, nil, time.Minute*10)
-
-// normalizeIP converts an IP to its normalized string representation.
-func normalizeIP(ip net.IP) string {
-	if v4 := ip.To4(); v4 != nil {
-		return v4.String()
-	}
-	return ip.String()
+// IPChecker holds the CIDR ranges in an optimized structure for fast lookups
+type IPChecker struct {
+	table *bart.Table[struct{}] // Using empty struct as value since we only need existence check
+	cache *expirable.LRU[string, bool]
+	log   *zap.Logger
 }
 
-// rawIPInRanges checks if the given IP is in the given CIDR ranges without using the cache.
-func rawIPInRanges(clientIP net.IP, cidrRanges []string, log *zap.Logger) bool {
+// NewIPChecker creates a new IPChecker instance with preprocessed CIDR ranges
+func NewIPChecker(cidrRanges []string, log *zap.Logger) *IPChecker {
+	return &IPChecker{
+		table: buildTable(cidrRanges, log),
+		cache: expirable.NewLRU[string, bool](MaxKeys, nil, time.Minute*10),
+		log:   log,
+	}
+}
+
+// buildTable initializes the radix tree with CIDR ranges during provisioning
+func buildTable(cidrRanges []string, log *zap.Logger) *bart.Table[struct{}] {
+	table := &bart.Table[struct{}]{}
 	for _, cidr := range cidrRanges {
-		// If the range is a predefined key (e.g., "openai"), use the corresponding CIDRs
+		// Handle predefined range groups
 		if ranges, ok := data.IPRanges[cidr]; ok {
 			for _, predefinedCIDR := range ranges {
-				_, ipNet, err := net.ParseCIDR(predefinedCIDR)
-				if err != nil {
-					log.Error(fmt.Sprintf("Invalid predefined CIDR: %v", err))
-					continue
-				}
-				if ipNet.Contains(clientIP) {
-					return true
+				if err := insertCIDR(table, predefinedCIDR, log); err != nil {
+					log.Error("invalid predefined CIDR",
+						zap.String("group", cidr),
+						zap.String("cidr", predefinedCIDR),
+						zap.Error(err))
 				}
 			}
-		} else {
-			// Otherwise, treat it as a custom CIDR
-			_, ipNet, err := net.ParseCIDR(cidr)
-			if err != nil {
-				log.Error(fmt.Sprintf("Invalid CIDR: %v", err))
-				continue
-			}
-			if ipNet.Contains(clientIP) {
-				return true
-			}
+			continue
+		}
+
+		// Handle direct CIDR specifications
+		if err := insertCIDR(table, cidr, log); err != nil {
+			log.Error("invalid CIDR specification",
+				zap.String("cidr", cidr),
+				zap.Error(err))
 		}
 	}
-	return false
+	return table
 }
 
-// IPInRanges checks if the given IP is within any of the provided CIDR ranges.
-// It returns true if the IP is in any of the ranges, false otherwise.
-func IPInRanges(clientIP net.IP, cidrRanges []string, log *zap.Logger) bool {
-	// Normalize the IP for consistent cache keys
-	cacheKey := normalizeIP(clientIP)
+// insertCIDR safely parses and inserts a CIDR into the radix tree
+func insertCIDR(table *bart.Table[struct{}], cidr string, log *zap.Logger) error {
+	prefix, err := netip.ParsePrefix(cidr)
+	if err != nil {
+		return fmt.Errorf("failed to parse CIDR: %w", err)
+	}
+	table.Insert(prefix, struct{}{})
+	return nil
+}
 
-	// Check the cache first
-	if val, ok := cache.Get(cacheKey); ok {
+// IPInRanges checks if an IP address matches any CIDR range with caching
+func (c *IPChecker) IPInRanges(clientIP net.IP) bool {
+	normalizedIP := normalizeIP(clientIP)
+
+	// Cache check
+	if val, ok := c.cache.Get(normalizedIP); ok {
 		return val
 	}
 
-	// If not in the cache, check the ranges
-	inRanges := rawIPInRanges(clientIP, cidrRanges, log)
+	// Convert to netip.Addr for radix tree lookup
+	ipAddr, err := netIPToNetipAddr(clientIP)
+	if err != nil {
+		c.log.Error("invalid IP address",
+			zap.String("ip", clientIP.String()),
+			zap.Error(err))
+		return false
+	}
 
-	// Add the result to the cache
-	cache.Add(cacheKey, inRanges)
+	// Radix tree lookup
+	result := c.table.Contains(ipAddr)
 
-	return inRanges
+	// Update cache
+	c.cache.Add(normalizedIP, result)
+	return result
+}
+
+// normalizeIP ensures consistent string representation for caching
+func normalizeIP(ip net.IP) string {
+	if ip4 := ip.To4(); ip4 != nil {
+		return ip4.String()
+	}
+	return ip.To16().String()
+}
+
+// netIPToNetipAddr converts net.IP to netip.Addr with validation
+func netIPToNetipAddr(ip net.IP) (netip.Addr, error) {
+	addr, ok := netip.AddrFromSlice(ip)
+	if !ok {
+		return netip.Addr{}, errors.New("invalid IP address format")
+	}
+	return addr, nil
 }

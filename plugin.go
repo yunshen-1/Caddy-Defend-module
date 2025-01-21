@@ -1,14 +1,12 @@
 package caddydefender
 
 import (
-	"bufio"
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
+	"github.com/jasonlovesdoggo/caddy-defender/utils"
 	"go.uber.org/zap"
-	"net"
-	"os"
 )
 
 func init() {
@@ -48,6 +46,7 @@ type Defender struct {
 	// responder is the internal responder interface used to handle requests that match the specified IP ranges.
 	// It is set based on the value of RawResponder during configuration validation.
 	responder Responder
+	ipChecker *utils.IPChecker
 
 	// log is the logger used for logging debug and error messages within the middleware.
 	log *zap.Logger
@@ -57,27 +56,30 @@ type Defender struct {
 func (m *Defender) Provision(ctx caddy.Context) error {
 	m.log = ctx.Logger(m)
 
-	// Load ranges from the specified text filez
-	if m.RangesFile != "" {
-		file, err := os.Open(m.RangesFile)
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-
-		scanner := bufio.NewScanner(file)
-		for scanner.Scan() {
-			line := scanner.Text()
-			_, _, err := net.ParseCIDR(line)
-			if err != nil {
-				return err
-			}
-		}
-
-		if err := scanner.Err(); err != nil {
-			return err
-		}
-	}
+	//// Load ranges from the specified text filez
+	//if m.RangesFile != "" {
+	//	file, err := os.Open(m.RangesFile)
+	//	if err != nil {
+	//		return err
+	//	}
+	//	defer file.Close()
+	//
+	//	scanner := bufio.NewScanner(file)
+	//	for scanner.Scan() {
+	//		line := scanner.Text()
+	//		_, _, err := net.ParseCIDR(line)
+	//		if err != nil {
+	//			return err
+	//		}
+	//	}
+	//
+	//	if err := scanner.Err(); err != nil {
+	//		return err
+	//	}
+	//
+	//}
+	// Initialize IP checker with ranges
+	m.ipChecker = utils.NewIPChecker(m.AdditionalRanges, m.log)
 
 	return nil
 }
