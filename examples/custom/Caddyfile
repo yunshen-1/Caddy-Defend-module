@@ -1,19 +1,21 @@
 {
-    auto_https off
-    order defender before basicauth
-    debug
+	auto_https off
+	order defender after header
+	debug
 }
 
 :80 {
-    defender custom {
-        ranges localhost
-        message "You are not welcome here"
-    }
-    respond "This is what a human sees"
-}
+	bind 127.0.0.1 ::1
 
+	defender custom {
+		ranges localhost
+		message "You are not welcome here"
+	}
+	respond "This is what a human sees"
+}
 
 :83 {
-    respond "Clear text HTTP"
-}
+	bind 127.0.0.1 ::1
 
+	respond "Clear text HTTP"
+}

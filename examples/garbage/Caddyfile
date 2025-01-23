@@ -1,23 +1,20 @@
-    {
-    auto_https off
-#    order defender after header
-    debug
+{
+	auto_https off
+	order defender after header
+	debug
 }
 
 :80 {
+	bind 127.0.0.1 ::1
 
-    bind 127.0.0.1 ::1
-
-    defender garbage  {
-        ranges localhost
-    }
-    respond "This is what a human sees"
+	defender garbage {
+		ranges localhost
+	}
+	respond "This is what a human sees"
 }
-
 
 :83 {
-        bind 127.0.0.1 ::1
+	bind 127.0.0.1 ::1
 
-    respond "Clear text HTTP"
+	respond "Clear text HTTP"
 }
-
