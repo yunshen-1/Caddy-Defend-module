@@ -13,6 +13,8 @@ import (
 	"slices"
 )
 
+var responderTypes = []string{"block", "garbage", "custom"}
+
 // UnmarshalCaddyfile sets up the handler from Caddyfile tokens. Syntax:
 //
 //		defender <responder> {
@@ -26,9 +28,14 @@ func (m *Defender) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 
 	// Get the responder type
 	if !d.NextArg() {
-		return d.ArgErr()
+		return d.Errf("missing responder type")
 	}
-	m.RawResponder = d.Val()
+	// validate responder type
+	if !slices.Contains(responderTypes, d.Val()) {
+		return d.Errf("invalid responder type: %s", d.Val())
+	} else {
+		m.RawResponder = d.Val()
+	}
 
 	// Parse the block if it exists
 	var ranges []string
