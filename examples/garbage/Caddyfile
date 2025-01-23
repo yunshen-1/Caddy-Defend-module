@@ -1,10 +1,13 @@
-{
+    {
     auto_https off
-    order defender before basicauth
+#    order defender after header
     debug
 }
 
 :80 {
+
+    bind 127.0.0.1 ::1
+
     defender garbage  {
         ranges localhost
     }
@@ -13,6 +16,8 @@
 
 
 :83 {
+        bind 127.0.0.1 ::1
+
     respond "Clear text HTTP"
 }
 
