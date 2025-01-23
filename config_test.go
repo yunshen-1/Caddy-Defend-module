@@ -2,6 +2,7 @@ package caddydefender
 
 import (
 	"encoding/json"
+	"github.com/caddyserver/caddy/v2/caddytest"
 	"github.com/jasonlovesdoggo/caddy-defender/responders"
 	"testing"
 
@@ -184,5 +185,66 @@ func TestValidation(t *testing.T) {
 			responder:    &responders.BlockResponder{},
 		}
 		require.ErrorContains(t, def.Validate(), "invalid IP range")
+	})
+}
+
+func TestDefenderValidation(t *testing.T) {
+	t.Run("Invalid responder type", func(t *testing.T) {
+		caddytest.AssertLoadError(t, `{
+  "admin": {
+    "disabled": true
+  },
+  "apps": {
+    "http": {
+      "servers": {
+        "srv0": {
+          "listen": [
+            "127.0.0.1:80",
+            "[::1]:80"
+          ],
+          "routes": [
+            {
+              "handle": [
+                {
+                  "handler": "defender",
+                  "ranges": [
+                    "localhost"
+                  ],
+                  "raw_responder": "pineapple"
+                },
+                {
+                  "body": "This is what a human sees",
+                  "handler": "static_response"
+                }
+              ]
+            }
+          ],
+          "automatic_https": {
+            "disable": true
+          }
+        },
+        "srv1": {
+          "listen": [
+            "127.0.0.1:83",
+            "[::1]:83"
+          ],
+          "routes": [
+            {
+              "handle": [
+                {
+                  "body": "Clear text HTTP",
+                  "handler": "static_response"
+                }
+              ]
+            }
+          ],
+          "automatic_https": {
+            "disable": true
+          }
+        }
+      }
+    }
+  }
+}`, "json", "unknown responder type")
 	})
 }
