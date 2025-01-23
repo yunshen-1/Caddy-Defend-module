@@ -21,33 +21,57 @@ func init() {
 }
 
 // Defender implements an HTTP middleware that enforces IP-based rules to protect your site from AIs/Scrapers.
-// It allows you to block or manipulate requests based on the client's IP address by specifying IP ranges to block
-// or using predefined ranges for popular services like AWS, GCP, OpenAI, and GitHub Copilot.
+// It allows blocking or manipulating requests based on client IP addresses using CIDR ranges or predefined ranges
+// for services such as AWS, GCP, OpenAI, and GitHub Copilot.
 //
-// The middleware supports multiple responder types, including blocking requests, returning garbage data, or
-// sending custom messages.
+// **JSON Configuration:**
+//
+// ```json
+//
+//	{
+//	  "handler": "defender",
+//	  "raw_responder": "block",
+//	  "ranges": ["openai", "10.0.0.0/8"],
+//	  "message": "Custom block message" // Only for 'custom' responder
+//	}
+//
+// ```
+//
+// **Caddyfile Syntax:**
+// ```
+//
+//	defender <responder_type> {
+//	    ranges <cidr_or_predefined...>
+//	    message <custom_message>
+//	}
+//
+// ```
+//
+// Supported responder types:
+// - `block`: Immediately block requests with 403 Forbidden
+// - `garbage`: Respond with random garbage data
+// - `custom`: Return a custom message (requires `message` field)
+//
+// Predefined range keys include: "aws", "gcp", "openai", "azure", "cloudflare", and "github_copilot".
 type Defender struct {
-	// Ranges specifies IP ranges provided by the user to block or manipulate.
-	// These ranges are in CIDR notation (e.g., "192.168.1.0/24") and are applied alongside predefined ranges.
-	// This field is optional.
+	// Ranges specifies IP ranges to block, which can be either:
+	// - CIDR notations (e.g., "192.168.1.0/24")
+	// - Predefined service keys (e.g., "openai", "aws")
+	// Default: All predefined ranges if empty
 	Ranges []string `json:"ranges,omitempty"`
 
-	// Message specifies a custom message to return to the client when using the "custom" responder.
-	// This field is optional and only used when the responder type is set to "custom".
+	// Message specifies the custom response message for 'custom' responder type.
+	// Required only when using 'custom' responder.
 	Message string `json:"message,omitempty"`
 
-	// RawResponder is an internal field that represents the responder type specified in the configuration.
-	// Supported values are "block", "garbage", and "custom".
-	// This field is optional and is used during configuration unmarshaling.
+	// RawResponder defines the response strategy for blocked requests.
+	// Required. Must be one of: "block", "garbage", "custom"
 	RawResponder string `json:"raw_responder,omitempty"`
 
-	// responder is the internal responder interface used to handle requests that match the specified IP ranges.
-	// It is set based on the value of RawResponder during configuration validation.
+	// responder is the internal implementation of the response strategy
 	responder Responder
 	ipChecker *ip.IPChecker
-
-	// log is the logger used for logging debug and error messages within the middleware.
-	log *zap.Logger
+	log       *zap.Logger
 }
 
 // Provision sets up the middleware and logger.
