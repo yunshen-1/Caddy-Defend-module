@@ -84,15 +84,6 @@ defender <responder> {
   - `custom`: Returns a custom message (requires `responder_args`).
 - `<ip_ranges...>`: A list of CIDR ranges or predefined range keys (e.g., `openai`, `localhost`) to match against the client's IP.
 - `<custom message>`: A custom message to return when using the `custom` responder.
-#### **Ordering the Middleware**
-To ensure the `defender` middleware runs before other middleware (e.g., `basicauth`), add the following to your global configuration:
-
-```caddyfile
-{
-    order defender before basicauth
-}
-```
-
 ---
 
 ### **Examples**
@@ -143,7 +134,9 @@ The plugin includes predefined IP ranges for popular AI services. These ranges a
 | DeepSeek            | [deepseek.go](ranges/fetchers/deepseek.go)   |
 | GitHub Copilot      | [github.go](ranges/fetchers/github.go)       |
 | Microsoft Azure     | [azure.go](ranges/fetchers/azure.go)         |
-| Localhost (testing) | [localhost.go](ranges/fetchers/localhost.go) |
+| Localhost (testing) | [localhost.go](ranges/fetchers/localhost.go) | 
+| AWS                 | [aws.go](ranges/fetchers/aws/aws.go)         | 
+| AWS Region          | [aws_region.go](ranges/fetchers/aws/aws_region.go) |
 
 More are welcome! for a precompiled list, see the [embedded results](ranges/data/generated.go)
 
