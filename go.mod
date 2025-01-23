@@ -5,8 +5,8 @@ go 1.23
 require (
 	github.com/caddyserver/caddy/v2 v2.9.1
 	github.com/gaissmai/bart v0.17.8
-	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/stretchr/testify v1.9.0
+	github.com/viccon/sturdyc v1.1.1
 	go.uber.org/zap v1.27.0
 )
 

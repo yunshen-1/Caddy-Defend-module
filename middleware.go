@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/jasonlovesdoggo/caddy-defender/utils"
 )
 
 // ServeHTTP implements the middleware logic.
@@ -20,15 +19,17 @@ func (m Defender) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyht
 	}
 
 	clientIP := net.ParseIP(host)
-	m.log.Debug("client IP", zap.String("ip", clientIP.String()))
 	if clientIP == nil {
 		m.log.Error("Invalid client IP", zap.String("ip", host))
 		return caddyhttp.Error(http.StatusForbidden, fmt.Errorf("invalid client IP"))
 	}
-
-	// Check if the client IP is in any of the additional ranges using the optimized checker
-	if m.ipChecker.IPInRanges(clientIP) {
+	m.log.Debug("Ranges", zap.Strings("ranges", m.Ranges))
+	// Check if the client IP is in any of the ranges using the optimized checker
+	if m.ipChecker.IPInRanges(r.Context(), clientIP) {
+		m.log.Debug("IP is in ranges", zap.String("ip", clientIP.String()))
 		return m.responder.Respond(w, r)
+	} else {
+		m.log.Debug("IP is not in ranges", zap.String("ip", clientIP.String()))
 	}
 
 	// IP is not in any of the ranges, proceed to the next handler

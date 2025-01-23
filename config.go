@@ -3,28 +3,26 @@ package caddydefender
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
+	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
+	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
 	"github.com/jasonlovesdoggo/caddy-defender/responders"
-	"maps"
 	"net"
+	"reflect"
 	"slices"
-
-	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 )
 
 // UnmarshalCaddyfile sets up the handler from Caddyfile tokens. Syntax:
 //
 //		defender <responder> {
-//		# Additional IP ranges to block (optional)
+//		# IP ranges to block
 //		ranges
 //	 # Custom message to return to the client when using "custom" middleware (optional)
 //	 message
 //		}
 func (m *Defender) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
-	// Skip the "defender" token
-	if !d.Next() {
-		return d.Err("expected defender directive")
-	}
+	d.Next() // consume directive name
 
 	// Get the responder type
 	if !d.NextArg() {
@@ -40,6 +38,7 @@ func (m *Defender) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 			for d.NextArg() {
 				ranges = append(ranges, d.Val())
 			}
+			m.Ranges = ranges
 		case "message":
 			if !d.NextArg() {
 				return d.ArgErr()
@@ -51,17 +50,15 @@ func (m *Defender) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 		}
 	}
 
-	if len(ranges) > 0 {
-		m.AdditionalRanges = ranges
-	}
-
 	return nil
 }
 
-// UnmarshalJSON handles the Responder interface
+// UnmarshalJSON handles the Responder interface and converts the interface to a Defender struct
 func (m *Defender) UnmarshalJSON(b []byte) error {
 	type rawDefender Defender
 	var rawConfig rawDefender
+	var excludedKeys = []string{"responder"}
+
 	if err := json.Unmarshal(b, &rawConfig); err != nil {
 		return err
 	}
@@ -77,9 +74,25 @@ func (m *Defender) UnmarshalJSON(b []byte) error {
 		m.responder = &responders.CustomResponder{
 			Message: m.Message,
 		}
-
 	default:
 		return fmt.Errorf("unknown responder type: %s", rawConfig.RawResponder)
+	}
+
+	// Use reflection to copy fields excluding excludedKeys
+	rawVal := reflect.ValueOf(rawConfig)
+	mVal := reflect.ValueOf(m).Elem()
+	rawType := rawVal.Type()
+
+	for i := 0; i < rawVal.NumField(); i++ {
+		fieldName := rawType.Field(i).Name
+		if slices.Contains(excludedKeys, fieldName) {
+			continue
+		}
+		mField := mVal.FieldByName(fieldName)
+		rawField := rawVal.Field(i)
+		if mField.IsValid() && mField.CanSet() {
+			mField.Set(rawField)
+		}
 	}
 
 	return nil
@@ -90,12 +103,12 @@ func (m *Defender) Validate() error {
 	if m.responder == nil {
 		return fmt.Errorf("responder not configured")
 	}
-	if len(m.AdditionalRanges) == 0 {
+	if len(m.Ranges) == 0 {
 		// set the default ranges to be all of the predefined ranges
-		m.AdditionalRanges = slices.Collect(maps.Keys(data.IPRanges))
+		return fmt.Errorf("no ranges specified, this is required")
 	}
 
-	for _, ipRange := range m.AdditionalRanges {
+	for _, ipRange := range m.Ranges {
 		// Check if the range is a predefined key (e.g., "openai")
 		if _, ok := data.IPRanges[ipRange]; ok {
 			// If it's a predefined key, skip CIDR validation
@@ -110,4 +123,10 @@ func (m *Defender) Validate() error {
 	}
 
 	return nil
+}
+
+func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) {
+	var m Defender
+	err := m.UnmarshalCaddyfile(h.Dispenser)
+	return m, err
 }
