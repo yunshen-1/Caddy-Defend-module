@@ -29,11 +29,6 @@ type Defender struct {
 	// This field is optional.
 	AdditionalRanges []string `json:"additional_ranges,omitempty"`
 
-	// RangesFile specifies the path to a file containing IP ranges (one per line) to block or manipulate.
-	// The file can include CIDR ranges or predefined range keys (e.g., "aws", "gcloud").
-	// This field is optional.
-	RangesFile string `json:"ranges_file,omitempty"`
-
 	// Message specifies a custom message to return to the client when using the "custom" responder.
 	// This field is optional and only used when the responder type is set to "custom".
 	Message string `json:"message,omitempty"`
@@ -56,30 +51,7 @@ type Defender struct {
 func (m *Defender) Provision(ctx caddy.Context) error {
 	m.log = ctx.Logger(m)
 
-	//// Load ranges from the specified text filez
-	//if m.RangesFile != "" {
-	//	file, err := os.Open(m.RangesFile)
-	//	if err != nil {
-	//		return err
-	//	}
-	//	defer file.Close()
-	//
-	//	scanner := bufio.NewScanner(file)
-	//	for scanner.Scan() {
-	//		line := scanner.Text()
-	//		_, _, err := net.ParseCIDR(line)
-	//		if err != nil {
-	//			return err
-	//		}
-	//	}
-	//
-	//	if err := scanner.Err(); err != nil {
-	//		return err
-	//	}
-	//
-	//}
-	// Initialize IP checker with ranges
-	m.ipChecker = utils.NewIPChecker(m.AdditionalRanges, m.log)
+	m.ipChecker = ip.NewIPChecker(m.AdditionalRanges, m.log)
 
 	return nil
 }
