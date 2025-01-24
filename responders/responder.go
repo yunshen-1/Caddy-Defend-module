@@ -1,4 +1,4 @@
-package caddydefender
+package responders
 
 import (
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"

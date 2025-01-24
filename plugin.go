@@ -6,6 +6,7 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
+	"github.com/jasonlovesdoggo/caddy-defender/responders"
 	"github.com/jasonlovesdoggo/caddy-defender/utils/ip"
 	"go.uber.org/zap"
 	"maps"
@@ -69,7 +70,7 @@ type Defender struct {
 	RawResponder string `json:"raw_responder,omitempty"`
 
 	// responder is the internal implementation of the response strategy
-	responder Responder
+	responder responders.Responder
 	ipChecker *ip.IPChecker
 	log       *zap.Logger
 }
