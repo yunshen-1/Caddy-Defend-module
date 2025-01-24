@@ -82,45 +82,13 @@ defender <responder> {
   - `block`: Returns a `403 Forbidden` response.
   - `garbage`: Returns garbage data to pollute AI training.
   - `custom`: Returns a custom message (requires `responder_args`).
+  - `ratelimit`: Marks requests for rate limiting (requires [Caddy-Ratelimit](https://github.com/mholt/caddy-ratelimit) to be installed as well ).
 - `<ip_ranges...>`: A list of CIDR ranges or predefined range keys (e.g., `openai`, `localhost`) to match against the client's IP.
 - `<custom message>`: A custom message to return when using the `custom` responder.
 ---
 
-### **Examples**
 
-#### **Block Requests**
-Block requests from specific IP ranges:
-```caddyfile
-localhost:8080 {
-    defender block {
-        range 203.0.113.0/24 openai 198.51.100.0/24 
-    } 
-    respond "Hello, world!" # what humans see
-}
-```
-
-#### **Return Garbage Data**
-Return garbage data for requests from specific IP ranges:
-```caddyfile
-localhost:8081 {
-    defender garbage {
-        range 192.168.0.0/24 
-    }
-    respond "Hello, world!" # what humans see
-}
-```
-
-#### **Custom Response**
-Return a custom message for requests from specific IP ranges:
-```caddyfile
-localhost:8082 {
-    defender custom {
-        message "Custom response message"
-        range 10.0.0.0/8
-    } 
-    respond "Hello, world!" # what humans see
-} 
-```
+## For examples, check out [docs/examples.md](docs/examples.md)
 
 ---
 
@@ -128,28 +96,21 @@ localhost:8082 {
 
 The plugin includes predefined IP ranges for popular AI services. These ranges are embedded in the binary and can be used without additional configuration.
 
-| Service             | IP Ranges                                    |
-|---------------------|----------------------------------------------|
-| OpenAI              | [openai.go](ranges/fetchers/openai.go)       |
-| DeepSeek            | [deepseek.go](ranges/fetchers/deepseek.go)   |
-| GitHub Copilot      | [github.go](ranges/fetchers/github.go)       |
-| Microsoft Azure     | [azure.go](ranges/fetchers/azure.go)         |
-| Localhost (testing) | [localhost.go](ranges/fetchers/localhost.go) | 
-| AWS                 | [aws.go](ranges/fetchers/aws/aws.go)         | 
+| Service             | IP Ranges                                          |
+|---------------------|----------------------------------------------------|
+| OpenAI              | [openai.go](ranges/fetchers/openai.go)             |
+| DeepSeek            | [deepseek.go](ranges/fetchers/deepseek.go)         |
+| GitHub Copilot      | [github.go](ranges/fetchers/github.go)             |
+| Microsoft Azure     | [azure.go](ranges/fetchers/azure.go)               |
+| Localhost (testing) | [localhost.go](ranges/fetchers/localhost.go)       | 
+| AWS                 | [aws.go](ranges/fetchers/aws/aws.go)               | 
 | AWS Region          | [aws_region.go](ranges/fetchers/aws/aws_region.go) |
 
 More are welcome! for a precompiled list, see the [embedded results](ranges/data/generated.go)
 
 ## **Contributing**
 
-We welcome contributions! Here’s how you can get started:
-
-### Adding New IP Ranges
-To add new IP ranges, you need to create a new fetcher in the `ranges/fetchers` package. Follow the steps in the [Contributing Guide](CONTRIBUTING.md).
-
-### Adding a New Responder
-
-To add a new responder, you need to create a new responder in the `responders` package and update the `UnmarshalCaddyfile` method in the `Defender` struct to handle the new responder. Follow the steps in the [Contributing Guide](CONTRIBUTING.md).
+We welcome contributions! To get started, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 

@@ -1,6 +1,7 @@
 package responders
 
 import (
+	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"net/http"
 )
 
@@ -9,7 +10,7 @@ type CustomResponder struct {
 	Message string `json:"message"`
 }
 
-func (c CustomResponder) Respond(w http.ResponseWriter, _ *http.Request) error {
+func (c CustomResponder) ServeHTTP(w http.ResponseWriter, _ *http.Request, _ caddyhttp.Handler) error {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte(c.Message))

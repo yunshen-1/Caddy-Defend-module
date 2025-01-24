@@ -1,6 +1,7 @@
 package responders
 
 import (
+	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"math/rand"
 	"net/http"
 	"strings"
@@ -9,7 +10,7 @@ import (
 // GarbageResponder returns garbage data to the client.
 type GarbageResponder struct{}
 
-func (g GarbageResponder) Respond(w http.ResponseWriter, r *http.Request) error {
+func (g GarbageResponder) ServeHTTP(w http.ResponseWriter, r *http.Request, _ caddyhttp.Handler) error {
 	garbage := generateTerribleText(100)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)

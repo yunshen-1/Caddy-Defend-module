@@ -13,7 +13,7 @@ import (
 	"slices"
 )
 
-var responderTypes = []string{"block", "garbage", "custom"}
+var responderTypes = []string{"block", "garbage", "custom", "ratelimit"}
 
 // UnmarshalCaddyfile sets up the handler from Caddyfile tokens. Syntax:
 //
@@ -81,6 +81,8 @@ func (m *Defender) UnmarshalJSON(b []byte) error {
 		m.responder = &responders.CustomResponder{
 			Message: m.Message,
 		}
+	case "ratelimit":
+		m.responder = &responders.RateLimitResponder{}
 	default:
 		return fmt.Errorf("unknown responder type: %s", rawConfig.RawResponder)
 	}

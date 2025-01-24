@@ -1,0 +1,23 @@
+{
+	order rate_limit after basic_auth
+}
+
+:80 {
+	defender ratelimit {
+		ranges localhost
+	}
+
+	rate_limit {
+		zone static_example {
+			match {
+				method GET
+				header X-RateLimit-Apply true
+			}
+			key {remote_host}
+			events 3
+			window 1m
+		}
+	}
+
+	respond "Hey I'm behind a rate limit!"
+}
