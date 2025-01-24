@@ -76,30 +76,32 @@ localhost:8080 {
 #### **Rate Limiting**
 Integrate with [caddy-ratelimit](https://github.com/mholt/caddy-ratelimit):
 ```caddyfile
-example.com {
-    defender ratelimit {
-        ranges cloudflare
-        rate_limit_header X-API-Limit
-    }
-    
-    ratelimit {
-        match header X-API-Limit true # required, otherwise ratelimit will not work
-        rate 5r/s # example rate limit
-        burst 10 # example burst limit
-    }
-    
-    respond "API Response"
+{
+	order rate_limit after basic_auth
 }
 
-# JSON equivalent
-{
-    "handler": "defender",
-    "raw_responder": "ratelimit",
-    "ranges": ["cloudflare"],
-    "rate_limit_header": "X-API-Limit"
+:80 {
+	defender ratelimit {
+		ranges localhost
+	}
+    
+	rate_limit {
+		zone static_example {
+			match {
+				method GET
+				header X-RateLimit-Apply true
+			}
+			key {remote_host}
+			events 3
+			window 1m
+		}
+	}
+
+	respond "Hey I'm behind a rate limit!"
 }
 ```
-For complete rate limiting documentation, see [RATELIMIT.md](./ratelimit.md).
+For complete rate limiting documentation,
+see [RATELIMIT.md](./ratelimit.md) and [caddy-ratelimit](https://github.com/mholt/caddy-ratelimit).
 
 ---
 

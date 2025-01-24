@@ -13,7 +13,7 @@ import (
 	"slices"
 )
 
-var responderTypes = []string{"block", "garbage", "custom"}
+var responderTypes = []string{"block", "garbage", "custom", "ratelimit"}
 
 // UnmarshalCaddyfile sets up the handler from Caddyfile tokens. Syntax:
 //

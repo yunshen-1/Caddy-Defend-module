@@ -8,13 +8,11 @@
 ```caddy
 defender ratelimit {
     ranges <cidr_or_predefined...>
-    # Optional rate limit marker header (default: X-Defender-RateLimit)
-    rate_limit_header <header-name>
 }
 
 ratelimit {
     # Match requests marked by Defender
-    match header <header-name> <value>
+    match header X-Defender-RateLimit true
     
     # Rate limiting parameters
     rate  <requests-per-second>
