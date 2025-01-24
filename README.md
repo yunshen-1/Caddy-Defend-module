@@ -82,6 +82,7 @@ defender <responder> {
   - `block`: Returns a `403 Forbidden` response.
   - `garbage`: Returns garbage data to pollute AI training.
   - `custom`: Returns a custom message (requires `responder_args`).
+  - `ratelimit`: Marks requests for rate limiting (requires [Caddy-Ratelimit](https://github.com/mholt/caddy-ratelimit) to be installed as well ).
 - `<ip_ranges...>`: A list of CIDR ranges or predefined range keys (e.g., `openai`, `localhost`) to match against the client's IP.
 - `<custom message>`: A custom message to return when using the `custom` responder.
 ---
