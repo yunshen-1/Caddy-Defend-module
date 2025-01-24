@@ -27,7 +27,7 @@ func (m Defender) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyht
 	// Check if the client IP is in any of the ranges using the optimized checker
 	if m.ipChecker.IPInRanges(r.Context(), clientIP) {
 		m.log.Debug("IP is in ranges", zap.String("ip", clientIP.String()))
-		return m.responder.Respond(w, r)
+		return m.responder.ServeHTTP(w, r, next)
 	} else {
 		m.log.Debug("IP is not in ranges", zap.String("ip", clientIP.String()))
 	}

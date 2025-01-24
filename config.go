@@ -81,6 +81,8 @@ func (m *Defender) UnmarshalJSON(b []byte) error {
 		m.responder = &responders.CustomResponder{
 			Message: m.Message,
 		}
+	case "ratelimit":
+		m.responder = &responders.RateLimitResponder{}
 	default:
 		return fmt.Errorf("unknown responder type: %s", rawConfig.RawResponder)
 	}
