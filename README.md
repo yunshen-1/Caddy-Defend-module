@@ -121,7 +121,6 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 ---
 
 ## **Acknowledgments**
-- 
 - [The inspiration for this project](https://www.reddit.com/r/selfhosted/comments/1i154h7/comment/m73pj9t/).
 - [bart](https://github.com/gaissmai/bart) - [Karl Gaissmaier](https://github.com/gaissmai)'s efficient routing table implementation (Balanced ART adaptation) enabling our high-performance IP matching
 - Built with ❤️ using [Caddy](https://caddyserver.com).
