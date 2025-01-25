@@ -1,4 +1,6 @@
 name: Update IP Ranges
+permissions:
+  contents: write
 
 on:
   schedule:
