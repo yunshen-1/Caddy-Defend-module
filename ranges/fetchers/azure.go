@@ -35,7 +35,7 @@ func (f AzurePublicCloudFetcher) FetchIPRanges() ([]string, error) {
 	}
 
 	// Step 2: Extract the JSON download URL using a regex
-	urlRegex := regexp.MustCompile(`^https://download\.microsoft\.com/.*?\.json$`)
+	urlRegex := regexp.MustCompile(`https://download\.microsoft\.com/[^\s"']+\.json`)
 	matches := urlRegex.FindStringSubmatch(string(body))
 	if len(matches) == 0 {
 		return nil, fmt.Errorf("failed to find JSON download URL in Azure download page")
