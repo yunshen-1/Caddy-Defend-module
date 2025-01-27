@@ -7,7 +7,7 @@ require (
 	github.com/gaissmai/bart v0.17.8
 	github.com/mholt/caddy-ratelimit v0.1.0
 	github.com/stretchr/testify v1.10.0
-	github.com/viccon/sturdyc v1.1.1
+	github.com/viccon/sturdyc v1.1.2
 	go.uber.org/zap v1.27.0
 )
 
