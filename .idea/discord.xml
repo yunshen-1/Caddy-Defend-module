@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DiscordProjectSettings">
+    <option name="show" value="ASK" />
+    <option name="description" value="Caddy module to block IPs and prevent AIs from training on your websites" />
+    <option name="applicationTheme" value="default" />
+    <option name="iconsTheme" value="default" />
+    <option name="button1Title" value="GitHub" />
+    <option name="button1Url" value="https://github.com/JasonLovesDoggo/caddy-defender" />
+    <option name="button2Title" value="Docs" />
+    <option name="button2Url" value="https://caddyserver.com/docs/modules/http.handlers.defender" />
+    <option name="customApplicationId" value="" />
+  </component>
+</project>
