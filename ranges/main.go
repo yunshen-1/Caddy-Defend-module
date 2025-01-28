@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
 	"github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers"
 	"github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers/aws"
 	"log"
@@ -38,8 +39,8 @@ func main() {
 		fetchers.LocalhostFetcher{},
 	}
 
-	// Create a map to hold the IP ranges
-	ipRanges := make(map[string][]string)
+	// Load the existing IP ranges from the data package
+	ipRanges := data.IPRanges
 
 	// Use a WaitGroup to wait for all fetchers to complete
 	var wg sync.WaitGroup
