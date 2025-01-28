@@ -74,7 +74,7 @@ The `defender` directive is used to configure the Caddy Defender plugin. It has 
 ```caddyfile
 defender <responder> {
     message <custom message>
-    range <ip_ranges...>
+    ranges <ip_ranges...>
 }
 ```
 
