@@ -139,7 +139,7 @@ The Fetchers Module is integrated into the **Caddy Defender** middleware. To use
 ```caddyfile
 localhost:8080 {
     defender block {
-        range aws gcloud openai
+        ranges aws gcloud openai
     }
     respond "Hello, world!"
 }

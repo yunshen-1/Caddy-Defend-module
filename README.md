@@ -74,7 +74,7 @@ The `defender` directive is used to configure the Caddy Defender plugin. It has 
 ```caddyfile
 defender <responder> {
     message <custom message>
-    range <ip_ranges...>
+    ranges <ip_ranges...>
 }
 ```
 
@@ -96,15 +96,16 @@ defender <responder> {
 
 The plugin includes predefined IP ranges for popular AI services. These ranges are embedded in the binary and can be used without additional configuration.
 
-| Service             | IP Ranges                                          |
-|---------------------|----------------------------------------------------|
-| OpenAI              | [openai.go](ranges/fetchers/openai.go)             |
-| DeepSeek            | [deepseek.go](ranges/fetchers/deepseek.go)         |
-| GitHub Copilot      | [github.go](ranges/fetchers/github.go)             |
-| Microsoft Azure     | [azure.go](ranges/fetchers/azure.go)               |
-| Localhost (testing) | [localhost.go](ranges/fetchers/localhost.go)       | 
-| AWS                 | [aws.go](ranges/fetchers/aws/aws.go)               | 
-| AWS Region          | [aws_region.go](ranges/fetchers/aws/aws_region.go) |
+| Service               | Key                                         | IP Ranges                                          |
+|-----------------------|---------------------------------------------|----------------------------------------------------|
+| AWS                   | aws                                         | [aws.go](ranges/fetchers/aws/aws.go)               |
+| AWS Region            | aws-us-east-1, aws-us-west-1, aws-eu-west-1 | [aws_region.go](ranges/fetchers/aws/aws_region.go) |
+| DeepSeek              | deepseek                                    | [deepseek.go](ranges/fetchers/deepseek.go)         |
+| GitHub Copilot        | githubcopilot                               | [github.go](ranges/fetchers/github.go)             |
+| Google Cloud Platform | gcloud                                      | [gcloud.go](ranges/fetchers/gcloud.go)             |
+| Microsoft Azure       | azurepubliccloud                            | [azure.go](ranges/fetchers/azure.go)               |
+| OpenAI                | openai                                      | [openai.go](ranges/fetchers/openai.go)             |
+| Localhost (testing)   | localhost                                   | [localhost.go](ranges/fetchers/localhost.go)       |
 
 More are welcome! for a precompiled list, see the [embedded results](ranges/data/generated.go)
 
