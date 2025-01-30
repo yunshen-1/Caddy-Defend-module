@@ -6,11 +6,8 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/jasonlovesdoggo/caddy-defender/matchers/ip"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
 	"github.com/jasonlovesdoggo/caddy-defender/responders"
 	"go.uber.org/zap"
-	"maps"
-	"slices"
 )
 
 func init() {
@@ -20,6 +17,11 @@ func init() {
 	httpcaddyfile.RegisterDirectiveOrder("defender", "after", "header")
 
 }
+
+// DefaultRanges is the default ranges to block if none are specified.
+var (
+	DefaultRanges = []string{"aws", "gcloud", "azurepubliccloud", "openai", "deepseek", "githubcopilot"}
+)
 
 // Defender implements an HTTP middleware that enforces IP-based rules to protect your site from AIs/Scrapers.
 // It allows blocking or manipulating requests based on client IP addresses using CIDR ranges or predefined ranges
@@ -53,12 +55,13 @@ func init() {
 // - `garbage`: Respond with random garbage data
 // - `custom`: Return a custom message (requires `message` field)
 //
-// Predefined range keys include: "aws", "gcp", "openai", "azure", "cloudflare", and "github_copilot".
+// For a of predefined ranges, see the the [readme]
+// [readme]: https://github.com/JasonLovesDoggo/caddy-defender#embedded-ip-ranges
 type Defender struct {
 	// Ranges specifies IP ranges to block, which can be either:
 	// - CIDR notations (e.g., "192.168.1.0/24")
 	// - Predefined service keys (e.g., "openai", "aws")
-	// Default: All predefined ranges if empty
+	// Default:
 	Ranges []string `json:"ranges,omitempty"`
 
 	// An optional whitelist of IP addresses to exclude from blocking. If empty, no IPs are whitelisted.
@@ -86,8 +89,8 @@ func (m *Defender) Provision(ctx caddy.Context) error {
 
 	if len(m.Ranges) == 0 {
 		// set the default ranges to be all of the predefined ranges
-		m.log.Debug("no ranges specified, defaulting to all predefined ranges")
-		m.Ranges = slices.Collect(maps.Keys(data.IPRanges))
+		m.log.Debug("no ranges specified, defaulting to default ranges", zap.Strings("ranges", DefaultRanges))
+		m.Ranges = DefaultRanges
 	}
 
 	// ensure to keep AFTER the ranges are checked (above)
