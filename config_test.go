@@ -4,10 +4,7 @@ import (
 	"encoding/json"
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddytest"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
 	"github.com/jasonlovesdoggo/caddy-defender/responders"
-	"maps"
-	"slices"
 	"sort"
 	"testing"
 
@@ -217,7 +214,7 @@ func TestValidation(t *testing.T) {
 			return def.Ranges[i] < def.Ranges[j]
 		})
 
-		defaultRanges := slices.Collect(maps.Keys(data.IPRanges))
+		defaultRanges := DefaultRanges
 
 		sort.Slice(defaultRanges, func(i, j int) bool {
 			return defaultRanges[i] < defaultRanges[j]
