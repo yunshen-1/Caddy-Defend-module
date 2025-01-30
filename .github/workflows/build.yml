@@ -73,6 +73,8 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+
 
       - name: Build and push image
         uses: docker/build-push-action@v6
