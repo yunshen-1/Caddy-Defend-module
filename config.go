@@ -2,6 +2,7 @@ package caddydefender
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"reflect"
@@ -156,6 +157,11 @@ func (m *Defender) Validate() error {
 	err := whitelist.Validate(m.Whitelist)
 	if err != nil {
 		return err
+	}
+
+	// Validate responder config options
+	if m.RawResponder == "redirect" && m.URL == "" {
+		return errors.New("redirect responder requires 'url' to be set")
 	}
 
 	return nil

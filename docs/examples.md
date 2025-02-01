@@ -8,16 +8,19 @@ Caddy Defender supports multiple response strategies:
 | `garbage`   | Returns random garbage data to confuse scrapers/AI                        | No                           |
 | `custom`    | Returns a custom text response                                            | `message` field required     |
 | `ratelimit` | Marks requests for rate limiting (requires `caddy-ratelimit` integration) | Additional rate limit config |
+| `redirect` | Returns `308 Permanent Redirect` response                                  | `url` field required |
 
 ---
 
 #### **Block Requests**
+
 Block requests from specific IP ranges with 403 Forbidden:
+
 ```caddyfile
 localhost:8080 {
     defender block {
-        ranges 203.0.113.0/24 openai 198.51.100.0/24 
-    } 
+        ranges 203.0.113.0/24 openai 198.51.100.0/24
+    }
     respond "Human-friendly content"
 }
 
@@ -32,11 +35,13 @@ localhost:8080 {
 ---
 
 #### **Return Garbage Data**
+
 Return meaningless content for AI/scrapers:
+
 ```caddyfile
 localhost:8080 {
     defender garbage {
-        ranges 192.168.0.0/24 
+        ranges 192.168.0.0/24
     }
     respond "Legitimate content"
 }
@@ -52,13 +57,15 @@ localhost:8080 {
 ---
 
 #### **Custom Response**
+
 Return tailored messages for blocked requests:
+
 ```caddyfile
 localhost:8080 {
     defender custom {
         ranges 10.0.0.0/8
         message "Access restricted for your network"
-    } 
+    }
     respond "Public content"
 }
 
@@ -74,7 +81,9 @@ localhost:8080 {
 ---
 
 #### **Rate Limiting**
+
 Integrate with [caddy-ratelimit](https://github.com/mholt/caddy-ratelimit):
+
 ```caddyfile
 {
 	order rate_limit after basic_auth
@@ -84,7 +93,7 @@ Integrate with [caddy-ratelimit](https://github.com/mholt/caddy-ratelimit):
 	defender ratelimit {
 		ranges private
 	}
-    
+
 	rate_limit {
 		zone static_example {
 			match {
@@ -100,12 +109,37 @@ Integrate with [caddy-ratelimit](https://github.com/mholt/caddy-ratelimit):
 	respond "Hey I'm behind a rate limit!"
 }
 ```
+
 For complete rate limiting documentation,
 see [RATELIMIT.md](./ratelimit.md) and [caddy-ratelimit](https://github.com/mholt/caddy-ratelimit).
 
 ---
 
+#### **Redirect Response**
+
+Redirect requests:
+
+```caddyfile
+localhost:8080 {
+    defender redirect {
+        ranges 10.0.0.0/8
+        url "https://example.com"
+    }
+}
+
+# JSON equivalent
+{
+    "handler": "defender",
+    "raw_responder": "redirect",
+    "ranges": ["10.0.0.0/8"],
+    "url": "https://example.com"
+}
+```
+
+---
+
 #### **Combination Example**
+
 Mix multiple response strategies:
 ```caddyfile
 example.com {
