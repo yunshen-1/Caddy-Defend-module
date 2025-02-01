@@ -2,9 +2,10 @@ package caddydefender
 
 import (
 	"fmt"
-	"go.uber.org/zap"
 	"net"
 	"net/http"
+
+	"go.uber.org/zap"
 
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 )
@@ -33,7 +34,7 @@ Disallow:
 User-agent: *
 Disallow: /
 `
-	w.Write([]byte(robotsTxt))
+	_, _ = w.Write([]byte(robotsTxt))
 	return true
 }
 

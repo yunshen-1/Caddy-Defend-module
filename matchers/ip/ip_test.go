@@ -2,10 +2,11 @@ package ip
 
 import (
 	"context"
-	"go.uber.org/zap/zapcore"
 	"net"
 	"testing"
 	"time"
+
+	"go.uber.org/zap/zapcore"
 
 	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
 	"github.com/stretchr/testify/assert"
@@ -177,40 +178,40 @@ func TestPredefinedCIDRGroups(t *testing.T) {
 
 	tests := []struct {
 		name          string
-		groups        []string
 		ip            string
+		groups        []string
 		expected      bool
 		expectedError bool
 	}{
 		{
 			name:     "IPv4 in predefined group",
-			groups:   []string{"cloud-providers"},
 			ip:       "203.0.113.42",
+			groups:   []string{"cloud-providers"},
 			expected: true,
 		},
 		{
 			name:     "IPv6 in predefined group",
-			groups:   []string{"cloud-providers"},
 			ip:       "2001:db8:1::42",
+			groups:   []string{"cloud-providers"},
 			expected: true,
 		},
 		{
 			name:     "IP not in group",
-			groups:   []string{"cloud-providers"},
 			ip:       "192.168.1.100",
+			groups:   []string{"cloud-providers"},
 			expected: false,
 		},
 		{
 			name:          "Nonexistent group",
-			groups:        []string{"invalid-group"},
 			ip:            "203.0.113.42",
+			groups:        []string{"invalid-group"},
 			expected:      false,
 			expectedError: true,
 		},
 		{
 			name:          "Empty group",
-			groups:        []string{"empty-group"},
 			ip:            "203.0.113.42",
+			groups:        []string{"empty-group"},
 			expected:      false,
 			expectedError: false,
 		},

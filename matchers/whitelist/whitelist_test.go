@@ -57,28 +57,28 @@ func TestWhitelisted(t *testing.T) {
 	}
 
 	tests := []struct {
-		name     string
 		ip       netip.Addr
+		name     string
 		expected bool
 	}{
 		{
-			name:     "IPv4 in whitelist",
 			ip:       netip.MustParseAddr("192.168.1.1"),
+			name:     "IPv4 in whitelist",
 			expected: true,
 		},
 		{
-			name:     "IPv6 in whitelist",
 			ip:       netip.MustParseAddr("2001:db8::1"),
+			name:     "IPv6 in whitelist",
 			expected: true,
 		},
 		{
-			name:     "IPv4 not in whitelist",
 			ip:       netip.MustParseAddr("192.168.1.2"),
+			name:     "IPv4 not in whitelist",
 			expected: false,
 		},
 		{
-			name:     "IPv6 not in whitelist",
 			ip:       netip.MustParseAddr("2001:db8::2"),
+			name:     "IPv6 not in whitelist",
 			expected: false,
 		},
 	}

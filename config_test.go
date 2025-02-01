@@ -17,9 +17,9 @@ func TestUnmarshalCaddyfile(t *testing.T) {
 	tests := []struct {
 		name        string
 		input       string
+		errContains string
 		expected    Defender
 		expectError bool
-		errContains string
 	}{
 		{
 			name: "valid block responder with CIDR ranges",
@@ -70,24 +70,24 @@ func TestUnmarshalCaddyfile(t *testing.T) {
 			input: `defender {
 				ranges 10.0.0.0/8
 			}`,
-			expectError: true,
 			errContains: "missing responder type",
+			expectError: true,
 		},
 		{
 			name: "invalid responder type",
 			input: `defender invalid {
 				ranges 10.0.0.0/8
 			}`,
-			expectError: true,
 			errContains: "invalid responder type",
+			expectError: true,
 		},
 		{
 			name: "invalid subdirective",
 			input: `defender block {
 				invalid 123
 			}`,
-			expectError: true,
 			errContains: "unknown subdirective",
+			expectError: true,
 		},
 	}
 

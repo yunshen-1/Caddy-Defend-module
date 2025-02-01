@@ -59,17 +59,10 @@ var (
 // For a of predefined ranges, see the the [readme]
 // [readme]: https://github.com/JasonLovesDoggo/caddy-defender#embedded-ip-ranges
 type Defender struct {
-	// Ranges specifies IP ranges to block, which can be either:
-	// - CIDR notations (e.g., "192.168.1.0/24")
-	// - Predefined service keys (e.g., "openai", "aws")
-	// Default:
-	Ranges []string `json:"ranges,omitempty"`
-
-	// An optional whitelist of IP addresses to exclude from blocking. If empty, no IPs are whitelisted.
-	// NOTE: this only supports IP addresses, not ranges.
-	// Default: []
-	Whitelist []string `json:"whitelist,omitempty"`
-
+	// responder is the internal implementation of the response strategy
+	responder responders.Responder
+	ipChecker *ip.IPChecker
+	log       *zap.Logger
 	// Message specifies the custom response message for 'custom' responder type.
 	// Required only when using 'custom' responder.
 	Message string `json:"message,omitempty"`
@@ -82,13 +75,19 @@ type Defender struct {
 	// Required. Must be one of: "block", "garbage", "custom", "redirect"
 	RawResponder string `json:"raw_responder,omitempty"`
 
+	// Ranges specifies IP ranges to block, which can be either:
+	// - CIDR notations (e.g., "192.168.1.0/24")
+	// - Predefined service keys (e.g., "openai", "aws")
+	// Default:
+	Ranges []string `json:"ranges,omitempty"`
+	// An optional whitelist of IP addresses to exclude from blocking. If empty, no IPs are whitelisted.
+	// NOTE: this only supports IP addresses, not ranges.
+	// Default: []
+	Whitelist []string `json:"whitelist,omitempty"`
+
 	// ServeIgnore specifies whether to serve a robots.txt file with a "Disallow: /" directive
 	// Default: false
 	ServeIgnore bool `json:"serve_ignore,omitempty"`
-	// responder is the internal implementation of the response strategy
-	responder responders.Responder
-	ipChecker *ip.IPChecker
-	log       *zap.Logger
 }
 
 // Provision sets up the middleware and logger.
