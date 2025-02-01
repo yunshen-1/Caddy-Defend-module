@@ -76,17 +76,19 @@ The `defender` directive is used to configure the Caddy Defender plugin. It has 
 defender <responder> {
     message <custom message>
     ranges <ip_ranges...>
+    url <url>
 }
 ```
 
 - `<responder>`: The responder backend to use. Supported values are:
   - `block`: Returns a `403 Forbidden` response.
   - `garbage`: Returns garbage data to pollute AI training.
-  - `custom`: Returns a custom message (requires `responder_args`).
-  - `redirect`: Returns a `308 Permanent Redirect` response (requires `responder_args`).
+  - `custom`: Returns a custom message (requires `message`).
+  - `redirect`: Returns a `308 Permanent Redirect` response (requires `url`).
   - `ratelimit`: Marks requests for rate limiting (requires [Caddy-Ratelimit](https://github.com/mholt/caddy-ratelimit) to be installed as well ).
 - `<ip_ranges...>`: An optional list of CIDR ranges or predefined range keys to match against the client's IP. Defaults to [`aws azurepubliccloud deepseek gcloud githubcopilot openai`](./plugin.go).
 - `<custom message>`: A custom message to return when using the `custom` responder.
+- `<url>`: The URI that the `redirect` responder would redirect to.
 ---
 
 ## For examples, check out [docs/examples.md](docs/examples.md)
