@@ -132,6 +132,6 @@ var IPRanges = map[string][]string{
 	t := template.Must(template.New("code").Parse(goTemplate))
 	err = t.Execute(file, ipRanges)
 	if err != nil {
-		log.Fatalf("Failed to execute template: %v", err)
+		log.Panicf("Failed to execute template: %v", err)
 	}
 }
