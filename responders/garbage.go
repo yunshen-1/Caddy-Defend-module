@@ -1,3 +1,4 @@
+//nolint:gosec
 package responders
 
 import (
@@ -10,7 +11,7 @@ import (
 // GarbageResponder returns garbage data to the client.
 type GarbageResponder struct{}
 
-func (g GarbageResponder) ServeHTTP(w http.ResponseWriter, r *http.Request, _ caddyhttp.Handler) error {
+func (g GarbageResponder) ServeHTTP(w http.ResponseWriter, _ *http.Request, _ caddyhttp.Handler) error {
 	garbage := generateTerribleText(100)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)

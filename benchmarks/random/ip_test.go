@@ -8,8 +8,8 @@ import (
 	"testing"
 )
 
-// ipToAddrFast is a function to convert net.IP to netip.Addr with potential optimizations
-func ipToAddrFast(ip net.IP) (netip.Addr, error) { //nolint:unparam /*Slowest*/
+// ipToAddrFast is a function to convert net.IP to netip.Addr with potential optimizations  /*Slowest*/
+func ipToAddrFast(ip net.IP) (netip.Addr, error) { //nolint:unparam
 	if ip == nil {
 		return netip.Addr{}, fmt.Errorf("ip is nil")
 	}
