@@ -2,3 +2,56 @@ linters-settings:
   govet:
     enable:
       - fieldalignment
+  dupl:
+    threshold: 100
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  gocyclo:
+    min-complexity: 15
+  lll:
+    line-length: 120
+  revive:
+    min-confidence: 0.8
+
+linters:
+  enable:
+    - bodyclose         # Checks whether HTTP response body is closed
+    - dogsled           # Checks assignments with too many blank identifiers
+    - dupl              # Code clone detection
+    - errcheck          # Error handling checks
+    - copyloopvar     # Checks for pointers to enclosing loop variables
+    - goconst           # Finds repeated strings that could be constants
+    - gocritic          # Various diagnostic checks
+    - gocyclo           # Cyclomatic complexity
+    - gofmt             # Formatting checks
+    - gosec             # Security checks
+    - gosimple          # Simplifies code
+    - govet             # Reports suspicious constructs
+    - ineffassign       # Detects unused assignments
+    - lll               # Line length limits
+    - misspell          # Spelling mistakes
+    - nakedret          # Naked returns
+    - prealloc          # Suggests slice preallocation
+    - revive            # Fast, configurable, extensible, flexible, and beautiful linter
+    - staticcheck       # Static analysis checks
+    - stylecheck        # Style checks
+    - typecheck         # Type-checking
+    - unconvert         # Unnecessary type conversions
+    - unparam           # Unused parameters
+    - unused            # Unused code
+    - whitespace        # Trailing whitespace and unnecessary blank lines
+
+run:
+  timeout: 5m
+  tests: true
+
+issues:
+  exclude-dirs:
+    - vendor
+  max-same-issues: 20
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - dupl
+        - gosec

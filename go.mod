@@ -1,6 +1,7 @@
 module github.com/jasonlovesdoggo/caddy-defender
 
-go 1.23
+go 1.23.6
+
 require (
 	github.com/caddyserver/caddy/v2 v2.9.1
 	github.com/gaissmai/bart v0.18.0

@@ -15,7 +15,6 @@ func init() {
 	caddy.RegisterModule(Defender{})
 	httpcaddyfile.RegisterHandlerDirective("defender", parseCaddyfile)
 	httpcaddyfile.RegisterDirectiveOrder("defender", "after", "header")
-
 }
 
 // DefaultRanges is the default ranges to block if none are specified.
