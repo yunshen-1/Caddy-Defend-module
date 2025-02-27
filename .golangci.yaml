@@ -12,7 +12,7 @@ linters-settings:
   lll:
     line-length: 120
   revive:
-    min-confidence: 0.8
+    confidence: 0.8
 
 linters:
   enable:
