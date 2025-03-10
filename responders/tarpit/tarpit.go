@@ -34,6 +34,13 @@ type Config struct {
 // ConfigureContentReader checks the content protocol configuration
 // and configures the appropriate content reader for the tarpit responder.
 func (r *Responder) ConfigureContentReader() error {
+	err := r.Validate()
+	if err != nil {
+		return err
+	}
+	if r.Config.Content.Protocol == "" {
+		return fmt.Errorf("missing tarpit Content protocol")
+	}
 	switch r.Config.Content.Protocol {
 	// If no content to provide, we'll just hold the connection open
 	case "":
@@ -47,12 +54,12 @@ func (r *Responder) ConfigureContentReader() error {
 			return err
 		}
 	case "http", "https":
-		cache := cache.New(&cache.Config{
+		tarCache := cache.New(&cache.Config{
 			Directory: "tarpit",
 		})
 		r.ContentReader = HTTPReader{
 			URL:   r.Config.Content.Protocol + "://" + r.Config.Content.Path,
-			Cache: cache,
+			Cache: tarCache,
 		}
 		err := r.ContentReader.Validate()
 		if err != nil {
@@ -140,4 +147,14 @@ func (r *Responder) ServeHTTP(w http.ResponseWriter, req *http.Request, _ caddyh
 			return nil
 		}
 	}
+}
+
+func (r *Responder) Validate() error {
+	if r.Config.Timeout <= 0 {
+		return fmt.Errorf("tarpit timeout must be greater than 0")
+	}
+	if r.Config.BytesPerSecond <= 10 {
+		return fmt.Errorf("tarpit bytes_per_second must be greater than 10 ")
+	}
+	return nil
 }
