@@ -39,7 +39,9 @@ func testValidURL(t *testing.T, cache *cache.Cache) {
 	// Create a mock server for the HTTP request
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("Hello, world!"))
+		if _, err := w.Write([]byte("Hello, world!")); err != nil {
+			t.Error(err)
+		}
 	}))
 	defer mockServer.Close()
 
@@ -121,12 +123,12 @@ func testBadHTTPStatus(t *testing.T, cache *cache.Cache) {
 
 	// Test Read method (should return an error as the server responds with a 404)
 	t.Run("Read", func(t *testing.T) {
-		expecterErr := "bad status: 404 Not Found"
+		expectedErr := "bad status: 404 Not Found"
 		_, err := httpReader.Read()
 		if err == nil {
 			t.Errorf("Expected error from Read with bad HTTP status, but got none")
-		} else if err.Error() != expecterErr {
-			t.Errorf("Expected error message '%s', but got: %v", expecterErr, err)
+		} else if err.Error() != expectedErr {
+			t.Errorf("Expected error message '%s', but got: %v", expectedErr, err)
 		}
 	})
 }
@@ -134,7 +136,9 @@ func testBadHTTPStatus(t *testing.T, cache *cache.Cache) {
 func testCacheMissThenSet(t *testing.T, cache *cache.Cache) {
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("Hello from cache!"))
+		if _, err := w.Write([]byte("Hello from cache!")); err != nil {
+			t.Error(err)
+		}
 	}))
 	defer mockServer.Close()
 

@@ -27,24 +27,22 @@ func (h HTTPReader) Read() (io.ReadCloser, error) {
 	}
 
 	// If not in cache, set it
-	if !ok {
-		// Get the data
-		resp, err := http.Get(h.URL)
-		if err != nil {
-			return nil, err
-		}
-		defer resp.Body.Close()
+	// Get the data
+	resp, err := http.Get(h.URL)
+	if err != nil {
+		return nil, err
+	}
+	// Note: Body.Close() handled by cache implementation
 
-		// Check server response
-		if resp.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("bad status: %s", resp.Status)
-		}
+	// Check server response
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("bad status: %s", resp.Status)
+	}
 
-		// If not in cache, set it, then return reader
-		err = h.Cache.Set(h.URL, resp.Body)
-		if err != nil {
-			return nil, err
-		}
+	// If not in cache, set it, then return reader
+	err = h.Cache.Set(h.URL, resp.Body)
+	if err != nil {
+		return nil, err
 	}
 
 	// After setting the cache, try again
@@ -53,7 +51,7 @@ func (h HTTPReader) Read() (io.ReadCloser, error) {
 		return nil, err
 	}
 
-	return reader, err
+	return reader, nil
 }
 
 // Validate ensures the remote file is accessible.

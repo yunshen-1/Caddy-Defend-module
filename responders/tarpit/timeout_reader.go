@@ -1,7 +1,6 @@
 package tarpit
 
 import (
-	"bytes"
 	"io"
 )
 
@@ -10,11 +9,7 @@ type TimeoutReader struct{}
 
 // Read implements the io.Reader interface and limits the reading to the specified Timeout.
 func (n TimeoutReader) Read() (io.ReadCloser, error) {
-	reader := bytes.NewReader([]byte{})
-
-	dumbReader := &dumbReader{
-		Reader: reader,
-	}
+	dumbReader := &dumbReader{}
 
 	return dumbReader, nil
 }
@@ -26,12 +21,10 @@ func (n TimeoutReader) Validate() error {
 
 // dumbReader wraps an io.Reader to implement the io.ReadCloser interface and does nothing else.
 // This is simply to stall connections in the event no content is provided.
-type dumbReader struct {
-	Reader io.Reader
-}
+type dumbReader struct{}
 
 // Read implements the io.Reader interface.
-func (t *dumbReader) Read(_ []byte) (n int, err error) {
+func (t *dumbReader) Read(b []byte) (n int, err error) {
 	return 0, nil
 }
 

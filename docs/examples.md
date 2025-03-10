@@ -168,8 +168,8 @@ Stream data at a slow, but configurable rate to stall bots and pollute AI traini
 ```caddyfile
 localhost:8080 {
     defender tarpit {
-		 ranges private
-         tarpit_config {
+        ranges private
+        tarpit_config {
             # Optional headers
             headers {
                 X-You-Got Played

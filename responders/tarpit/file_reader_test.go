@@ -1,6 +1,8 @@
 package tarpit
 
 import (
+	"errors"
+	"io"
 	"os"
 	"testing"
 )
@@ -10,7 +12,7 @@ func TestFileReader(t *testing.T) {
 		// Create a temporary file for testing
 		file, err := os.CreateTemp("", "test_file")
 		if err != nil {
-			t.Errorf("Failed to create temporary file: %v", err)
+			t.Fatalf("Failed to create temporary file: %v", err)
 		}
 
 		t.Cleanup(func() {
@@ -38,6 +40,12 @@ func TestFileReader(t *testing.T) {
 			// Ensure the file handle is a valid ReadCloser
 			if fileHandle == nil {
 				t.Error("Expected a valid file handle from Read, but got nil")
+			}
+
+			buf := make([]byte, 10)
+			_, err = fileHandle.Read(buf)
+			if !errors.Is(err, io.EOF) {
+				t.Errorf("Expected EOF error from Read, but got: %v", err)
 			}
 		})
 	})

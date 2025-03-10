@@ -12,7 +12,7 @@
         tarpit_config {
             # Optional headers
             headers {
-                X-You-Got Played
+                X-You-Got "Played"
             }
             # Optional. Use content from local file to stream slowly. Can also use source from http/https which is cached locally.
             content file://some-file.txt

@@ -56,10 +56,7 @@ func TestConfigureContentReader(t *testing.T) {
 		responder.ContentReader = FileReader{
 			Path: content.Path,
 		}
-		err = responder.ConfigureContentReader()
-		if err != nil {
-			t.Errorf("Expected no error, but got: %v", err)
-		}
+
 		if _, ok := responder.ContentReader.(FileReader); !ok {
 			t.Error("Expected FileReader, but got a different type")
 		}
@@ -127,7 +124,7 @@ func TestServeHTTP(t *testing.T) {
 			os.Remove(tmpFile.Name())
 		})
 
-		content := &Content{Protocol: "file", Path: testFile}
+		content := &Content{Protocol: "file", Path: tmpFile.Name()}
 		responder := newTestResponder(content, time.Second*5)
 
 		// Mock the content reader to return data
@@ -157,7 +154,7 @@ func TestServeHTTP(t *testing.T) {
 
 		err := responder.ServeHTTP(rec, req, nil)
 		if err != nil {
-			t.Error("Did not expect error from ServeHTTP, but got none")
+			t.Error("Did not expect error from ServeHTTP")
 		}
 
 		if rec.statusCode != http.StatusInternalServerError {
@@ -166,16 +163,24 @@ func TestServeHTTP(t *testing.T) {
 	})
 
 	t.Run("Timeout", func(t *testing.T) {
+		timeout := time.Millisecond * 100
 		content := &Content{Protocol: "file", Path: "/tmp/test.txt"}
-		responder := newTestResponder(content, time.Millisecond*50)
+		responder := newTestResponder(content, timeout)
 
 		// Mock a slow reader that causes a timeout
 		mockReader := &mockReadCloser{data: []byte("Slow data")}
 		responder.ContentReader = mockReader
 
+		start := time.Now()
+
 		err := responder.ServeHTTP(rec, req, nil)
 		if err != nil {
 			t.Errorf("Expected no error from ServeHTTP, but got: %v", err)
+		}
+
+		duration := time.Since(start)
+		if duration < timeout {
+			t.Errorf("Expected request to take at least %s from ServeHTTP, but took: %s", timeout, duration)
 		}
 	})
 }

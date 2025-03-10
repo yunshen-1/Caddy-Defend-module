@@ -64,8 +64,11 @@ func (c *Cache) Set(key string, i io.ReadCloser) error {
 	defer out.Close()
 
 	_, err = io.Copy(out, i)
+	if err != nil {
+		return err
+	}
 
-	return err
+	return i.Close()
 }
 
 // generateCacheKey takes a source and returns an md5 checksum as a string for caching files.

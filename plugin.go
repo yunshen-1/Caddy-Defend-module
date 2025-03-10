@@ -1,6 +1,7 @@
 package caddydefender
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -22,9 +23,16 @@ func init() {
 
 }
 
-// DefaultRanges is the default ranges to block if none are specified.
 var (
+	// DefaultRanges is the default ranges to block if none are specified.
 	DefaultRanges = []string{"aws", "gcloud", "azurepubliccloud", "openai", "deepseek", "githubcopilot"}
+	// Tarpit Defaults
+	// defaultTarpitTimeout is the default duration for a request to be closed after.
+	defaultTarpitTimeout = time.Second * 30
+	// defaultTarpitBytesPerSecond is the default amount of bytes to stream per second.
+	defaultTarpitBytesPerSecond = 24
+	// defaultTarpitResponseCode is the default HTTP respond code for the tarpit responder.
+	defaultTarpitResponseCode = http.StatusOK
 )
 
 // Defender implements an HTTP middleware that enforces IP-based rules to protect your site from AIs/Scrapers.
@@ -62,7 +70,7 @@ var (
 // - `redirect`: Redirect requests to a URL with 308 permanent redirect
 // - `tarpit`: Stream data at a slow, but configurable rate to stall bots and pollute AI training.
 //
-// For a of predefined ranges, see the the [readme]
+// For a list of predefined ranges, see the the [readme]
 // [readme]: https://github.com/JasonLovesDoggo/caddy-defender#embedded-ip-ranges
 type Defender struct {
 	// responder is the internal implementation of the response strategy
@@ -116,21 +124,26 @@ func (m *Defender) Provision(ctx caddy.Context) error {
 
 	// Finish configuring tarpit responder's content reader / defaults
 	if m.RawResponder == "tarpit" {
-		err := m.responder.(*tarpit.Responder).ConfigureContentReader()
+		tarpitResponder, ok := m.responder.(*tarpit.Responder)
+		if !ok {
+			return fmt.Errorf("expected tarpit responder but got %T", m.responder)
+		}
+
+		err := tarpitResponder.ConfigureContentReader()
 		if err != nil {
 			return err
 		}
 
 		if m.TarpitConfig.Timeout == 0 {
-			m.TarpitConfig.Timeout = time.Second * 30
+			m.TarpitConfig.Timeout = defaultTarpitTimeout
 		}
 
 		if m.TarpitConfig.BytesPerSecond == 0 {
-			m.TarpitConfig.BytesPerSecond = 24
+			m.TarpitConfig.BytesPerSecond = defaultTarpitBytesPerSecond
 		}
 
 		if m.TarpitConfig.ResponseCode == 0 {
-			m.TarpitConfig.ResponseCode = http.StatusOK
+			m.TarpitConfig.ResponseCode = defaultTarpitBytesPerSecond
 		}
 	}
 

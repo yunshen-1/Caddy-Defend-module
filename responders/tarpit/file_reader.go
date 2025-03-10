@@ -17,10 +17,9 @@ func (f FileReader) Read() (io.ReadCloser, error) {
 
 // Validate ensures the content path is readable
 func (f FileReader) Validate() error {
-	file, err := os.Open(f.Path)
+	_, err := os.Stat(f.Path)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
 	return nil
 }
