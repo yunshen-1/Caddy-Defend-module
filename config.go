@@ -100,7 +100,7 @@ func (m *Defender) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 						return errors.New("invalid content format. expected <content protocol>://<content path>")
 					}
 
-					m.TarpitConfig.Content = &tarpit.Content{
+					m.TarpitConfig.Content = tarpit.Content{
 						Protocol: content[0],
 						Path:     content[1],
 					}

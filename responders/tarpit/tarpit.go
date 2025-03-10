@@ -25,7 +25,7 @@ type Content struct {
 // Config holds the tarpit responder's configuration.
 type Config struct {
 	Headers        map[string]string `json:"headers"`
-	Content        *Content
+	Content        Content
 	Timeout        time.Duration `json:"timeout"`
 	BytesPerSecond int           `json:"bytes_per_second"`
 	ResponseCode   int           `json:"code"`
@@ -98,7 +98,10 @@ func (r *Responder) ServeHTTP(w http.ResponseWriter, req *http.Request, _ caddyh
 
 	// Write the first chunk before starting the ticker
 	if n > 0 {
-		_, _ = w.Write(buffer[:n])
+		_, err = w.Write(buffer[:n])
+		if err != nil {
+			return err
+		}
 		w.(http.Flusher).Flush()
 	}
 
@@ -113,9 +116,14 @@ func (r *Responder) ServeHTTP(w http.ResponseWriter, req *http.Request, _ caddyh
 	for {
 		select {
 		case <-ticker.C:
+			// Stop if client disconnects to prevent panic
+			if req.Context().Err() != nil {
+				break
+			}
+
 			n, err := reader.Read(chunk)
 			if err == io.EOF {
-				// Graceful exit as we've reached the end of the file
+				// Graceful exit as we've reached the end of the content
 				return nil
 			} else if err != nil {
 				return err
@@ -128,7 +136,7 @@ func (r *Responder) ServeHTTP(w http.ResponseWriter, req *http.Request, _ caddyh
 				w.(http.Flusher).Flush()
 			}
 		case <-timeout:
-			// Forcefully close response after duration expires
+			// Forcefully close response after timeout
 			return nil
 		}
 	}

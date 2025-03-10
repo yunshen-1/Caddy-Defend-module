@@ -13,7 +13,7 @@ import (
 )
 
 // Helper function to create a new responder
-func newTestResponder(content *Content, timeout time.Duration) *Responder {
+func newTestResponder(content Content, timeout time.Duration) *Responder {
 	return &Responder{
 		Config: &Config{
 			Content:        content,
@@ -26,7 +26,7 @@ func newTestResponder(content *Content, timeout time.Duration) *Responder {
 
 func TestConfigureContentReader(t *testing.T) {
 	t.Run("EmptyContent", func(t *testing.T) {
-		content := &Content{}
+		content := Content{}
 		responder := newTestResponder(content, time.Second*5)
 
 		err := responder.ConfigureContentReader()
@@ -49,7 +49,7 @@ func TestConfigureContentReader(t *testing.T) {
 			os.Remove(tmpFile.Name())
 		})
 
-		content := &Content{Protocol: "file", Path: tmpFile.Name()}
+		content := Content{Protocol: "file", Path: tmpFile.Name()}
 		responder := newTestResponder(content, time.Second*5)
 
 		// Mocking Validate method to succeed
@@ -63,7 +63,7 @@ func TestConfigureContentReader(t *testing.T) {
 	})
 
 	t.Run("HTTP", func(t *testing.T) {
-		content := &Content{Protocol: "http", Path: "example.com/data"}
+		content := Content{Protocol: "http", Path: "example.com/data"}
 		responder := newTestResponder(content, time.Second*5)
 
 		responder.ContentReader = HTTPReader{
@@ -80,7 +80,7 @@ func TestConfigureContentReader(t *testing.T) {
 	})
 
 	t.Run("HTTPS", func(t *testing.T) {
-		content := &Content{Protocol: "https", Path: "example.com/data"}
+		content := Content{Protocol: "https", Path: "example.com/data"}
 		responder := newTestResponder(content, time.Second*5)
 
 		responder.ContentReader = HTTPReader{
@@ -97,7 +97,7 @@ func TestConfigureContentReader(t *testing.T) {
 	})
 
 	t.Run("UnsupportedProtocol", func(t *testing.T) {
-		content := &Content{Protocol: "unsupported", Path: "/data"}
+		content := Content{Protocol: "unsupported", Path: "/data"}
 		responder := newTestResponder(content, time.Second*5)
 
 		err := responder.ConfigureContentReader()
@@ -124,7 +124,7 @@ func TestServeHTTP(t *testing.T) {
 			os.Remove(tmpFile.Name())
 		})
 
-		content := &Content{Protocol: "file", Path: tmpFile.Name()}
+		content := Content{Protocol: "file", Path: tmpFile.Name()}
 		responder := newTestResponder(content, time.Second*5)
 
 		// Mock the content reader to return data
@@ -146,7 +146,7 @@ func TestServeHTTP(t *testing.T) {
 	})
 
 	t.Run("ReadError", func(t *testing.T) {
-		content := &Content{Protocol: "file", Path: "/tmp/test.txt"}
+		content := Content{Protocol: "file", Path: "/tmp/test.txt"}
 		responder := newTestResponder(content, time.Second*5)
 
 		// Mock the content reader to return an error
@@ -164,7 +164,7 @@ func TestServeHTTP(t *testing.T) {
 
 	t.Run("Timeout", func(t *testing.T) {
 		timeout := time.Millisecond * 100
-		content := &Content{Protocol: "file", Path: "/tmp/test.txt"}
+		content := Content{Protocol: "file", Path: "/tmp/test.txt"}
 		responder := newTestResponder(content, timeout)
 
 		// Mock a slow reader that causes a timeout

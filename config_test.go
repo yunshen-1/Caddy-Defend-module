@@ -88,7 +88,7 @@ func TestUnmarshalCaddyfile(t *testing.T) {
 					Headers: map[string]string{
 						"X-You-Got": "Played",
 					},
-					Content: &tarpit.Content{
+					Content: tarpit.Content{
 						Protocol: "file",
 						Path:     "test.txt",
 					},
@@ -275,7 +275,7 @@ func TestUnmarshalJSON(t *testing.T) {
 						Headers: map[string]string{
 							"X-You-Got": "Played",
 						},
-						Content: &tarpit.Content{
+						Content: tarpit.Content{
 							Protocol: "file",
 							Path:     "test.txt",
 						},
