@@ -39,7 +39,7 @@ func (r *Responder) ConfigureContentReader() error {
 	if err != nil {
 		return err
 	}
-	if r.Config.Content.Protocol == "" {
+	if r.Config.Content.Protocol == "" && r.Config.Content.Path != "" {
 		return fmt.Errorf("missing tarpit Content protocol")
 	}
 	switch r.Config.Content.Protocol {
