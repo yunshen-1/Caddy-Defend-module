@@ -181,9 +181,6 @@ func (m *Defender) UnmarshalJSON(b []byte) error {
 		}
 	case "tarpit":
 		// check if tarpit config is empty
-		if rawConfig.TarpitConfig.Content == (tarpit.Content{}) {
-			return errors.New("tarpit_config is empty")
-		}
 		m.responder = &tarpit.Responder{
 			Config: &m.TarpitConfig,
 		}

@@ -1,6 +1,7 @@
 package tarpit
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -151,10 +152,10 @@ func (r *Responder) ServeHTTP(w http.ResponseWriter, req *http.Request, _ caddyh
 
 func (r *Responder) Validate() error {
 	if r.Config.Timeout <= 0 {
-		return fmt.Errorf("tarpit timeout must be greater than 0")
+		return errors.New("tarpit timeout must be greater than 0")
 	}
 	if r.Config.BytesPerSecond <= 10 {
-		return fmt.Errorf("tarpit bytes_per_second must be greater than 10 ")
+		return errors.New("tarpit bytes_per_second must be greater than 10")
 	}
 	return nil
 }
