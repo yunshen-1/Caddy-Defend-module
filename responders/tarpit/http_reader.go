@@ -32,7 +32,7 @@ func (h HTTPReader) Read() (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Note: Body.Close() handled by cache implementation
+	defer resp.Body.Close()
 
 	// Check server response
 	if resp.StatusCode != http.StatusOK {

@@ -143,7 +143,7 @@ func (m *Defender) Provision(ctx caddy.Context) error {
 		}
 
 		if m.TarpitConfig.ResponseCode == 0 {
-			m.TarpitConfig.ResponseCode = defaultTarpitBytesPerSecond
+			m.TarpitConfig.ResponseCode = defaultTarpitResponseCode
 		}
 	}
 
