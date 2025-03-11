@@ -180,7 +180,6 @@ func (m *Defender) UnmarshalJSON(b []byte) error {
 			URL: m.URL,
 		}
 	case "tarpit":
-		// check if tarpit config is empty
 		m.responder = &tarpit.Responder{
 			Config: &m.TarpitConfig,
 		}
