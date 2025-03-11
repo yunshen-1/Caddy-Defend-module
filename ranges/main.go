@@ -27,17 +27,17 @@ func main() {
 
 	// Create an array of all IP range fetchers
 	fetchersList := []fetchers.IPRangeFetcher{
-		fetchers.OpenAIFetcher{},                  // OpenAI services
-		fetchers.DeepSeekFetcher{},                // DeepSeek
-		fetchers.GithubCopilotFetcher{},           // GitHub Copilot
-		fetchers.AzurePublicCloudFetcher{},        // Azure Public Cloud
-		fetchers.GCloudFetcher{},                  // Google Cloud Platform
-		aws.AWSFetcher{},                          // Global AWS IP ranges
-		aws.AWSRegionFetcher{Region: "us-east-1"}, // us-east-1 region
-		aws.AWSRegionFetcher{Region: "us-west-1"}, // us-west-1 region
-		aws.AWSRegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
-		fetchers.PrivateFetcher{},                 // Private IP ranges (RFC 1918)
-		fetchers.AllFetcher{},                     // All IP ranges
+		fetchers.OpenAIFetcher{},               // OpenAI services
+		fetchers.DeepSeekFetcher{},             // DeepSeek
+		fetchers.GithubCopilotFetcher{},        // GitHub Copilot
+		fetchers.AzurePublicCloudFetcher{},     // Azure Public Cloud
+		fetchers.GCloudFetcher{},               // Google Cloud Platform
+		aws.AWSFetcher{},                       // Global AWS IP ranges
+		aws.RegionFetcher{Region: "us-east-1"}, // us-east-1 region
+		aws.RegionFetcher{Region: "us-west-1"}, // us-west-1 region
+		aws.RegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
+		fetchers.PrivateFetcher{},              // Private IP ranges (RFC 1918)
+		fetchers.AllFetcher{},                  // All IP ranges
 	}
 
 	// Load the existing IP ranges from the data package
