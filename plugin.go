@@ -1,12 +1,17 @@
 package caddydefender
 
 import (
+	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"github.com/jasonlovesdoggo/caddy-defender/matchers/ip"
 	"github.com/jasonlovesdoggo/caddy-defender/responders"
+	"github.com/jasonlovesdoggo/caddy-defender/responders/tarpit"
 	"go.uber.org/zap"
 )
 
@@ -17,9 +22,16 @@ func init() {
 	httpcaddyfile.RegisterDirectiveOrder("defender", "after", "header")
 }
 
-// DefaultRanges is the default ranges to block if none are specified.
 var (
+	// DefaultRanges is the default ranges to block if none are specified.
 	DefaultRanges = []string{"aws", "gcloud", "azurepubliccloud", "openai", "deepseek", "githubcopilot"}
+	// Tarpit Defaults
+	// defaultTarpitTimeout is the default duration for a request to be closed after.
+	defaultTarpitTimeout = time.Second * 30
+	// defaultTarpitBytesPerSecond is the default amount of bytes to stream per second.
+	defaultTarpitBytesPerSecond = 24
+	// defaultTarpitResponseCode is the default HTTP respond code for the tarpit responder.
+	defaultTarpitResponseCode = http.StatusOK
 )
 
 // Defender implements an HTTP middleware that enforces IP-based rules to protect your site from AIs/Scrapers.
@@ -55,8 +67,9 @@ var (
 // - `drop`: Drops the connection
 // - `garbage`: Respond with random garbage data
 // - `redirect`: Redirect requests to a URL with 308 permanent redirect
+// - `tarpit`: Stream data at a slow, but configurable rate to stall bots and pollute AI training.
 //
-// For a of predefined ranges, see the the [readme]
+// For a list of predefined ranges, see the the [readme]
 // [readme]: https://github.com/JasonLovesDoggo/caddy-defender#embedded-ip-ranges
 type Defender struct {
 	// responder is the internal implementation of the response strategy
@@ -72,7 +85,7 @@ type Defender struct {
 	URL string `json:"url,omitempty"`
 
 	// RawResponder defines the response strategy for blocked requests.
-	// Required. Must be one of: "block", "garbage", "custom", "redirect"
+	// Required. Must be one of: "block", "custom", "drop", "garbage", "redirect", "tarpit"
 	RawResponder string `json:"raw_responder,omitempty"`
 
 	// Ranges specifies IP ranges to block, which can be either:
@@ -80,17 +93,22 @@ type Defender struct {
 	// - Predefined service keys (e.g., "openai", "aws")
 	// Default:
 	Ranges []string `json:"ranges,omitempty"`
+
 	// An optional whitelist of IP addresses to exclude from blocking. If empty, no IPs are whitelisted.
 	// NOTE: this only supports IP addresses, not ranges.
 	// Default: []
 	Whitelist []string `json:"whitelist,omitempty"`
+
+	// An optional configuration for the 'tarpit' responder
+	// Default: {Headers: {}, timeout: 30s, ResponseCode: 200}
+	TarpitConfig tarpit.Config `json:"tarpit_config,omitempty"`
 
 	// ServeIgnore specifies whether to serve a robots.txt file with a "Disallow: /" directive
 	// Default: false
 	ServeIgnore bool `json:"serve_ignore,omitempty"`
 }
 
-// Provision sets up the middleware and logger.
+// Provision sets up the middleware, logger, and responder configurations.
 func (m *Defender) Provision(ctx caddy.Context) error {
 	m.log = ctx.Logger(m)
 
@@ -102,6 +120,31 @@ func (m *Defender) Provision(ctx caddy.Context) error {
 
 	// ensure to keep AFTER the ranges are checked (above)
 	m.ipChecker = ip.NewIPChecker(m.Ranges, m.Whitelist, m.log)
+
+	// Finish configuring tarpit responder's content reader / defaults
+	if m.RawResponder == "tarpit" {
+		tarpitResponder, ok := m.responder.(*tarpit.Responder)
+		if !ok {
+			return fmt.Errorf("expected tarpit responder but got %T", m.responder)
+		}
+
+		err := tarpitResponder.ConfigureContentReader()
+		if err != nil {
+			return err
+		}
+
+		if m.TarpitConfig.Timeout == 0 {
+			m.TarpitConfig.Timeout = defaultTarpitTimeout
+		}
+
+		if m.TarpitConfig.BytesPerSecond == 0 {
+			m.TarpitConfig.BytesPerSecond = defaultTarpitBytesPerSecond
+		}
+
+		if m.TarpitConfig.ResponseCode == 0 {
+			m.TarpitConfig.ResponseCode = defaultTarpitResponseCode
+		}
+	}
 
 	return nil
 }
