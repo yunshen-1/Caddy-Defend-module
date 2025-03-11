@@ -41,7 +41,7 @@ func (f OracleFetcher) FetchIPRanges() ([]string, error) {
 		return nil, fmt.Errorf("failed to unmarshal Oracle JSON: %v", err)
 	}
 
-	ipRanges := make([]string, 0)
+	ipRanges := make([]string, 0, 1000) // default to 1000 IP ranges as an initial capacity
 	for _, region := range result.Regions {
 		for _, cidr := range region.CIDRs {
 			ipRanges = append(ipRanges, cidr.CIDR)

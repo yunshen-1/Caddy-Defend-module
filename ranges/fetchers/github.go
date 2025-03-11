@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"net/http"
 )
 
@@ -50,9 +51,10 @@ func (f GithubCopilotFetcher) FetchIPRanges() ([]string, error) {
 
 	// Convert []interface{} to []string
 	// pre-allocate to at least the current length of the slice.
-	// assume it will grow to 1.3 times the current length, so pre-allocate to that size.
+	// assume it will grow to Phi times the current length, so pre-allocate to that size.
+	// https://en.wikipedia.org/wiki/Golden_ratio https://news.ycombinator.com/item?id=33476285
 	var copilotRanges = make([]string, 0,
-		int(float32(len(copilotRangesInterface))*1.3))
+		int(float32(len(copilotRangesInterface))*math.Phi))
 
 	for _, v := range copilotRangesInterface {
 		ipRange, ok := v.(string)
