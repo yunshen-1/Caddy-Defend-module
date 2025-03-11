@@ -112,6 +112,7 @@ The plugin includes predefined IP ranges for popular AI services. These ranges a
 |                        Google Cloud Platform                         |                   gcloud                    |       [gcloud.go](ranges/fetchers/gcloud.go)       |
 |                           Microsoft Azure                            |              azurepubliccloud               |        [azure.go](ranges/fetchers/azure.go)        |
 |                                OpenAI                                |                   openai                    |       [openai.go](ranges/fetchers/openai.go)       |
+|                           All IP addresses                           |                     all                     |          [all.go](ranges/fetchers/all.go)          |
 | [Private](https://caddyserver.com/docs/caddyfile/matchers#remote-ip) |                   private                   |      [private.go](ranges/fetchers/private.go)      |
 
 More are welcome! for a precompiled list, see the [embedded results](ranges/data/generated.go)

@@ -24,6 +24,7 @@ The **Fetchers Module** is a Go package designed to fetch IP ranges for various 
 | `GCloudFetcher`        | Fetches IP ranges for Google Cloud Platform (GCP) services.      |
 | `OpenAIFetcher`        | Fetches IP ranges for OpenAI services (e.g., ChatGPT, GPTBot).   |
 | `GithubCopilotFetcher` | Fetches IP ranges for GitHub Copilot services.                   |
+| `AllFetcher`           | Fetches IP ranges for all IP adders.                             |
 | `PrivateFetcher`       | Fetches IP ranges for private network ranges (used for testing). |
 
 ---
