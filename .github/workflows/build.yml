@@ -59,6 +59,7 @@ jobs:
   docker:
     needs: [lint, test]
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -90,7 +91,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
-          push: ${{ github.event_name != 'pull_request' }}  # Push only on push events, not pull requests
+          push: ${{ github.ref == 'refs/heads/main' }}  # Push only on push events to main branch
           provenance: mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
