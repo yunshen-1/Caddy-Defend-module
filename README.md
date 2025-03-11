@@ -110,6 +110,7 @@ The plugin includes predefined IP ranges for popular AI services. These ranges a
 |                               DeepSeek                               |                  deepseek                   |     [deepseek.go](ranges/fetchers/deepseek.go)     |
 |                            GitHub Copilot                            |                githubcopilot                |       [github.go](ranges/fetchers/github.go)       |
 |                        Google Cloud Platform                         |                   gcloud                    |       [gcloud.go](ranges/fetchers/gcloud.go)       |
+|                     Oracle Cloud  Infrastructure                     |                     oci                     |       [oracle.go](ranges/fetchers/oracle.go)       |
 |                           Microsoft Azure                            |              azurepubliccloud               |        [azure.go](ranges/fetchers/azure.go)        |
 |                                OpenAI                                |                   openai                    |       [openai.go](ranges/fetchers/openai.go)       |
 |                           All IP addresses                           |                     all                     |          [all.go](ranges/fetchers/all.go)          |

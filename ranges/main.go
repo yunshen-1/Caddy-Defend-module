@@ -29,6 +29,7 @@ func main() {
 	fetchersList := []fetchers.IPRangeFetcher{
 		fetchers.OpenAIFetcher{},               // OpenAI services
 		fetchers.DeepSeekFetcher{},             // DeepSeek
+		fetchers.OracleFetcher{},               // Oracle Cloud
 		fetchers.GithubCopilotFetcher{},        // GitHub Copilot
 		fetchers.AzurePublicCloudFetcher{},     // Azure Public Cloud
 		fetchers.GCloudFetcher{},               // Google Cloud Platform
