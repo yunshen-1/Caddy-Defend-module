@@ -84,7 +84,7 @@ func TestConfigureContentReader(t *testing.T) {
 		responder := newTestResponder(content, time.Second*5)
 
 		responder.ContentReader = HTTPReader{
-			URL:   "https://example.com/data",
+			URL:   "https://jsn.cam/data",
 			Cache: cache.New(&cache.Config{Directory: "tarpit"}),
 		}
 		err := responder.ConfigureContentReader()
