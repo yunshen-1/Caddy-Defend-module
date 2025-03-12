@@ -69,7 +69,7 @@ var (
 // - `redirect`: Redirect requests to a URL with 308 permanent redirect
 // - `tarpit`: Stream data at a slow, but configurable rate to stall bots and pollute AI training.
 //
-// For a list of predefined ranges, see the the [readme]
+// For a list of predefined ranges, see the [readme]
 // [readme]: https://github.com/JasonLovesDoggo/caddy-defender#embedded-ip-ranges
 type Defender struct {
 	// responder is the internal implementation of the response strategy
