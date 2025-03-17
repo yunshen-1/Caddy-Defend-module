@@ -39,6 +39,7 @@ func main() {
 		aws.RegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
 		fetchers.PrivateFetcher{},              // Private IP ranges (RFC 1918)
 		fetchers.AllFetcher{},                  // All IP ranges
+		fetchers.MistralFetcher{},              // Mistral IP ranges
 	}
 
 	// Load the existing IP ranges from the data package
