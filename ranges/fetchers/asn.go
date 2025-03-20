@@ -38,7 +38,7 @@ func (f ASNFetcher) FetchIPRanges() ([]string, error) {
 		}
 
 		body, err := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		defer resp.Body.Close()
 		if err != nil {
 			return nil, fmt.Errorf("failed to read response body for ASN %s: %v", asn, err)
 		}
