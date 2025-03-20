@@ -72,10 +72,10 @@ The `IPRanges` map in the `data` package contains the following keys:
 
 | Key             | Description                                              |
 |-----------------|----------------------------------------------------------|
+| `vpn`           | Known VPN services                                       |
 | `aws`           | Global IP ranges for AWS services.                       |
 | `aws-us-east-1` | IP ranges for the AWS `us-east-1` region.                |
 | `aws-us-west-1` | IP ranges for the AWS `us-west-1` region.                |
-| `aws-eu-west-1` | IP ranges for the AWS `eu-west-1` region.                |
 | `gcloud`        | IP ranges for Google Cloud Platform (GCP) services.      |
 | `openai`        | IP ranges for OpenAI services (e.g., ChatGPT, GPTBot).   |
 | `oci`           | IP ranges for Oracle Cloud Infrastructure (OCI) services |

@@ -27,6 +27,7 @@ func main() {
 
 	// Create an array of all IP range fetchers
 	fetchersList := []fetchers.IPRangeFetcher{
+		fetchers.VPNFetcher{},                  // Known VPN services
 		fetchers.LinodeFetcher{},               // Linode
 		fetchers.DigitalOceanFetcher{},         // Digital Ocean
 		fetchers.OpenAIFetcher{},               // OpenAI services
@@ -38,12 +39,12 @@ func main() {
 		aws.AWSFetcher{},                       // Global AWS IP ranges
 		aws.RegionFetcher{Region: "us-east-1"}, // us-east-1 region
 		aws.RegionFetcher{Region: "us-west-1"}, // us-west-1 region
-		aws.RegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
-		fetchers.PrivateFetcher{},              // Private IP ranges (RFC 1918)
-		fetchers.AllFetcher{},                  // All IP ranges
-		fetchers.MistralFetcher{},              // Mistral IP ranges
-		fetchers.VultrFetcher{},                // Vultr Cloud IP ranges
-		fetchers.CloudflareFetcher{},           // Cloudflare IP ranges
+		//aws.RegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
+		fetchers.PrivateFetcher{},    // Private IP ranges (RFC 1918)
+		fetchers.AllFetcher{},        // All IP ranges
+		fetchers.MistralFetcher{},    // Mistral IP ranges
+		fetchers.VultrFetcher{},      // Vultr Cloud IP ranges
+		fetchers.CloudflareFetcher{}, // Cloudflare IP ranges
 		// the issue with the tor fetcher is that TOR is a network of individual nodes,
 		// so it's not possible to get a list of all IP ranges. The current solution
 		// converts individual nodes to IP ranges.

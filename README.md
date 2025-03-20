@@ -105,6 +105,7 @@ The plugin includes predefined IP ranges for popular AI services. These ranges a
 
 |                               Service                                |                     Key                     |                     IP Ranges                      |
 |:--------------------------------------------------------------------:|:-------------------------------------------:|:--------------------------------------------------:|
+|                                 VPNs                                 |                     vpn                     |          [vpn.go](ranges/fetchers/vpn.go)          |
 |                                 AWS                                  |                     aws                     |        [aws.go](ranges/fetchers/aws/aws.go)        |
 |                              AWS Region                              | aws-us-east-1, aws-us-west-1, aws-eu-west-1 | [aws_region.go](ranges/fetchers/aws/aws_region.go) |
 |                               DeepSeek                               |                  deepseek                   |     [deepseek.go](ranges/fetchers/deepseek.go)     |
@@ -113,15 +114,15 @@ The plugin includes predefined IP ranges for popular AI services. These ranges a
 |                     Oracle Cloud  Infrastructure                     |                     oci                     |       [oracle.go](ranges/fetchers/oracle.go)       |
 |                           Microsoft Azure                            |              azurepubliccloud               |        [azure.go](ranges/fetchers/azure.go)        |
 |                                OpenAI                                |                   openai                    |       [openai.go](ranges/fetchers/openai.go)       |
-|                           All IP addresses                           |                     all                     |          [all.go](ranges/fetchers/all.go)          |
-| [Private](https://caddyserver.com/docs/caddyfile/matchers#remote-ip) |                   private                   |      [private.go](ranges/fetchers/private.go)      |
 |                               Mistral                                |                   mistral                   |      [mistral.go](ranges/fetchers/mistral.go)      |
 |                                Vultr                                 |                    vultr                    |        [vultr.go](ranges/fetchers/vultr.go)        |
 |                              Cloudflare                              |                 cloudflare                  |   [cloudflare.go](ranges/fetchers/cloudflare.go)   |
 |                            Digital Ocean                             |                digitalocean                 | [digitalocean.go](ranges/fetchers/digitalocean.go) |
 |                                Linode                                |                   linode                    |       [linode.go](ranges/fetchers/linode.go)       |
+| [Private](https://caddyserver.com/docs/caddyfile/matchers#remote-ip) |                   private                   |      [private.go](ranges/fetchers/private.go)      |
+|                           All IP addresses                           |                     all                     |          [all.go](ranges/fetchers/all.go)          |
 
-### Disabled by default (require manual inclusion at build time)
+## Disabled by default (require manual inclusion at build time)
 
 |                               Service                                |                     Key                     |                     IP Ranges                      |
 |:--------------------------------------------------------------------:|:-------------------------------------------:|:--------------------------------------------------:|
