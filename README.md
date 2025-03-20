@@ -83,13 +83,13 @@ defender <responder> {
 ```
 
 - `<responder>`: The responder backend to use. Supported values are:
-  - `block`: Returns a `403 Forbidden` response.
-  - `custom`: Returns a custom message (requires `message`).
-  - `drop`: Drops the connection.
-  - `garbage`: Returns garbage data to pollute AI training.
-  - `redirect`: Returns a `308 Permanent Redirect` response (requires `url`).
-  - `ratelimit`: Marks requests for rate limiting (requires [Caddy-Ratelimit](https://github.com/mholt/caddy-ratelimit) to be installed as well ).
-  - `tarpit`: Stream data at a slow, but configurable rate to stall bots and pollute AI training.
+    - `block`: Returns a `403 Forbidden` response.
+    - `custom`: Returns a custom message (requires `message`).
+    - `drop`: Drops the connection.
+    - `garbage`: Returns garbage data to pollute AI training.
+    - `redirect`: Returns a `308 Permanent Redirect` response (requires `url`).
+    - `ratelimit`: Marks requests for rate limiting (requires [Caddy-Ratelimit](https://github.com/mholt/caddy-ratelimit) to be installed as well ).
+    - `tarpit`: Stream data at a slow, but configurable rate to stall bots and pollute AI training.
 - `<ip_ranges...>`: An optional list of CIDR ranges or predefined range keys to match against the client's IP. Defaults to [`aws azurepubliccloud deepseek gcloud githubcopilot openai`](./plugin.go).
 - `<custom message>`: A custom message to return when using the `custom` responder.
 - `<url>`: The URI that the `redirect` responder would redirect to.
@@ -115,7 +115,18 @@ The plugin includes predefined IP ranges for popular AI services. These ranges a
 |                                OpenAI                                |                   openai                    |       [openai.go](ranges/fetchers/openai.go)       |
 |                           All IP addresses                           |                     all                     |          [all.go](ranges/fetchers/all.go)          |
 | [Private](https://caddyserver.com/docs/caddyfile/matchers#remote-ip) |                   private                   |      [private.go](ranges/fetchers/private.go)      |
-|                               Mistral                                |                   mistral                   |       [mistral.go](ranges/fetchers/mistral.go)     |
+|                               Mistral                                |                   mistral                   |      [mistral.go](ranges/fetchers/mistral.go)      |
+|                                Vultr                                 |                    vultr                    |        [vultr.go](ranges/fetchers/vultr.go)        |
+|                              Cloudflare                              |                 cloudflare                  |   [cloudflare.go](ranges/fetchers/cloudflare.go)   |
+|                            Digital Ocean                             |                digitalocean                 | [digitalocean.go](ranges/fetchers/digitalocean.go) |
+|                                Linode                                |                   linode                    |       [linode.go](ranges/fetchers/linode.go)       |
+
+### Disabled by default (require manual inclusion at build time)
+
+|                               Service                                |                     Key                     |                     IP Ranges                      |
+|:--------------------------------------------------------------------:|:-------------------------------------------:|:--------------------------------------------------:|
+|                            Tor Exit Nodes                            |                     tor                     |         [tor.go](ranges/fetchers/tor.go)           |
+|                   ASN (Autonomous System Numbers)                    |                     asn                     |         [asn.go](ranges/fetchers/asn.go)           |
 
 More are welcome! for a precompiled list, see the [embedded results](ranges/data/generated.go)
 

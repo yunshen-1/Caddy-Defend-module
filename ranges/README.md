@@ -82,6 +82,12 @@ The `IPRanges` map in the `data` package contains the following keys:
 | `githubcopilot` | IP ranges for GitHub Copilot services.                   |
 | `private`       | IP ranges for private networks (used for testing).       |
 | `mistral`       | IP ranges for Mistral services.                          |
+| `vultr`         | IP ranges for Vultr Cloud services.                      |
+| `cloudflare`    | IP ranges for Cloudflare services.                       |
+| `digitalocean`  | IP ranges for Digital Ocean services.                    |
+| `linode`        | IP ranges for Linode services.                           |
+| `tor`           | IP addresses of Tor exit nodes (disabled by default).    |
+| `asn`           | IP ranges for specific ASNs (disabled by default).       |
 
 ### Regenerating Pregenerated Results
 

@@ -27,6 +27,8 @@ func main() {
 
 	// Create an array of all IP range fetchers
 	fetchersList := []fetchers.IPRangeFetcher{
+		fetchers.LinodeFetcher{},               // Linode
+		fetchers.DigitalOceanFetcher{},         // Digital Ocean
 		fetchers.OpenAIFetcher{},               // OpenAI services
 		fetchers.DeepSeekFetcher{},             // DeepSeek
 		fetchers.OracleFetcher{},               // Oracle Cloud
@@ -42,6 +44,10 @@ func main() {
 		fetchers.MistralFetcher{},              // Mistral IP ranges
 		fetchers.VultrFetcher{},                // Vultr Cloud IP ranges
 		fetchers.CloudflareFetcher{},           // Cloudflare IP ranges
+		// the issue with the tor fetcher is that TOR is a network of individual nodes,
+		// so it's not possible to get a list of all IP ranges. The current solution
+		// converts individual nodes to IP ranges.
+		//fetchers.TorFetcher{}, // Tor exit nodes
 		// ASN fetcher with common cloud providers and AI companies
 		//fetchers.NewASNFetcher([]string{ /* todo: figure some way to implement this where the user specifies the ranges to fetch */
 		//	"AS13335", // Cloudflare
