@@ -40,6 +40,20 @@ func main() {
 		fetchers.PrivateFetcher{},              // Private IP ranges (RFC 1918)
 		fetchers.AllFetcher{},                  // All IP ranges
 		fetchers.MistralFetcher{},              // Mistral IP ranges
+		fetchers.VultrFetcher{},                // Vultr Cloud IP ranges
+		fetchers.CloudflareFetcher{},           // Cloudflare IP ranges
+		// ASN fetcher with common cloud providers and AI companies
+		//fetchers.NewASNFetcher([]string{ /* todo: figure some way to implement this where the user specifies the ranges to fetch */
+		//	"AS13335", // Cloudflare
+		//	"AS16509", // Amazon AWS
+		//	"AS8075",  // Microsoft
+		//	"AS15169", // Google
+		//	"AS54113", // Fastly
+		//	"AS19551", // Incapsula
+		//	"AS14061", // DigitalOcean
+		//	"AS63949", // Linode
+		//	"AS14618", // Amazon
+		//}),
 	}
 
 	// Load the existing IP ranges from the data package
@@ -90,7 +104,14 @@ func main() {
 		log.Fatalf("Invalid output format: %s. Use 'json' or 'go'", outputFormat)
 	}
 
-	fmt.Printf("\n🎉 All IP ranges have been successfully written to %s\n", outputFile)
+	// calculate total number of IP ranges
+
+	var totalRanges int
+	for _, ranges := range ipRanges {
+		totalRanges += len(ranges)
+	}
+
+	fmt.Printf("🎉 All %d IP ranges have been successfully written to %s\n", totalRanges, outputFile)
 }
 
 // writeJSON writes the IP ranges to a JSON file.
