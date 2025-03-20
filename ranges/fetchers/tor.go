@@ -21,7 +21,7 @@ func (f TorFetcher) Description() string {
 }
 
 func (f TorFetcher) FetchIPRanges() ([]string, error) {
-	torURL := "https://cdn.jsdelivr.net/gh/alireza-rezaee/tor-nodes@main/latest.exits.csv"
+	const torURL = "https://cdn.jsdelivr.net/gh/alireza-rezaee/tor-nodes@main/latest.exits.csv"
 
 	resp, err := http.Get(torURL)
 	if err != nil {

@@ -19,7 +19,7 @@ func (f DigitalOceanFetcher) Description() string {
 }
 
 func (f DigitalOceanFetcher) FetchIPRanges() ([]string, error) {
-	doURL := "https://digitalocean.com/geo/google.csv"
+	const doURL = "https://digitalocean.com/geo/google.csv"
 
 	resp, err := http.Get(doURL)
 	if err != nil {

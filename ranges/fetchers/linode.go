@@ -19,7 +19,7 @@ func (f LinodeFetcher) Description() string {
 }
 
 func (f LinodeFetcher) FetchIPRanges() ([]string, error) {
-	linodeURL := "https://geoip.linode.com/"
+	const linodeURL = "https://geoip.linode.com/"
 
 	resp, err := http.Get(linodeURL)
 	if err != nil {

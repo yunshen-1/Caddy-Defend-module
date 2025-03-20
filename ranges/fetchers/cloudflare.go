@@ -18,7 +18,7 @@ func (f CloudflareFetcher) Description() string {
 }
 
 func (f CloudflareFetcher) FetchIPRanges() ([]string, error) {
-	url := "https://api.cloudflare.com/client/v4/ips"
+	const url = "https://api.cloudflare.com/client/v4/ips"
 
 	resp, err := http.Get(url)
 	if err != nil {

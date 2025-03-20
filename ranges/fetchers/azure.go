@@ -22,7 +22,7 @@ func (f AzurePublicCloudFetcher) Description() string {
 
 func (f AzurePublicCloudFetcher) FetchIPRanges() ([]string, error) {
 	// Step 1: Fetch the download page to get the latest JSON URL
-	downloadPageURL := "https://www.microsoft.com/en-us/download/details.aspx?id=56519"
+	const downloadPageURL = "https://www.microsoft.com/en-us/download/details.aspx?id=56519"
 	resp, err := http.Get(downloadPageURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch Azure download page: %v", err)

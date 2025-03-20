@@ -19,7 +19,7 @@ func (f VPNFetcher) Description() string {
 }
 
 func (f VPNFetcher) FetchIPRanges() ([]string, error) {
-	vpnURL := "https://cdn.jsdelivr.net/gh/X4BNet/lists_vpn@main/output/vpn/ipv4.txt"
+	const vpnURL = "https://cdn.jsdelivr.net/gh/X4BNet/lists_vpn@main/output/vpn/ipv4.txt"
 
 	resp, err := http.Get(vpnURL)
 	if err != nil {

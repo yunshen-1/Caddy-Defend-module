@@ -37,7 +37,7 @@ type GCloudIPRanges struct {
 
 // fetchGCloudIPRanges fetches and parses the GCP IP ranges JSON file.
 func fetchGCloudIPRanges() ([]string, error) {
-	url := "https://www.gstatic.com/ipranges/cloud.json"
+	const url = "https://www.gstatic.com/ipranges/cloud.json"
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch GCP IP ranges from %s: %v", url, err)

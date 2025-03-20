@@ -18,7 +18,7 @@ func (f VultrFetcher) Description() string {
 }
 
 func (f VultrFetcher) FetchIPRanges() ([]string, error) {
-	url := "https://geofeed.constant.com/?json"
+	const url = "https://geofeed.constant.com/?json"
 
 	resp, err := http.Get(url)
 	if err != nil {
