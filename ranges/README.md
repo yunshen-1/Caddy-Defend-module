@@ -62,6 +62,7 @@ func main() {
 	// Access pregenerated IP ranges for Mistral
 	mistralRanges := data.IPRanges["mistral"]
 	fmt.Println("Mistral IP ranges:", mistralRanges)
+    // ...
 }
 ```
 
@@ -136,15 +137,6 @@ func main() {
 		fmt.Println("Error fetching GCP IP ranges:", err)
 	} else {
 		fmt.Println("GCP IP ranges:", ranges)
-	}
-
-	// Fetch Mistral IP ranges
-	mistralFetcher := fetchers.MistralFetcher{}
-	ranges, err = mistralFetcher.FetchIPRanges()
-	if err != nil {
-		fmt.Println("Error fetching Mistral IP ranges:", err)
-	} else {
-		fmt.Println("Mistral IP ranges:", ranges)
 	}
 }
 ```

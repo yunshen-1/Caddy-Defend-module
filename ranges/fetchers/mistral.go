@@ -27,9 +27,6 @@ func (f MistralFetcher) FetchIPRanges() ([]string, error) {
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code from Mistral: %d", resp.StatusCode)
 	}
-	if err != nil {
-		return nil, fmt.Errorf("failed to fetch Mistral IP ranges: %v", err)
-	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
@@ -45,8 +42,7 @@ func (f MistralFetcher) FetchIPRanges() ([]string, error) {
 	if err := json.Unmarshal(body, &ipRanges); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal Mistral JSON: %v", err)
 	}
-
-	var ranges []string
+	var ranges = make([]string, 0, len(ipRanges.Prefixes)+1)
 	for _, prefix := range ipRanges.Prefixes {
 		if prefix.IPv4Prefix != "" {
 			ranges = append(ranges, prefix.IPv4Prefix)
