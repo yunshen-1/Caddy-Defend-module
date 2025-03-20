@@ -10,7 +10,7 @@ defender ratelimit {
     ranges <cidr_or_predefined...>
 }
 
-ratelimit {
+rate_limit {
     # Match requests marked by Defender
     match header X-Defender-RateLimit true
     
@@ -40,7 +40,7 @@ example.com {
         ranges cloudflare openai
     }
     
-    ratelimit {
+    rate_limit {
         match header X-Defender-RateLimit true
         rate  5r/s
         burst 10
@@ -59,7 +59,7 @@ api.example.com {
         rate_limit_header X-API-RateLimit
     }
     
-    ratelimit {
+    rate_limit {
         match header X-API-RateLimit true
         rate  10r/s
         burst 20
@@ -118,7 +118,7 @@ api.example.com {
        ranges aws
    }
    
-   ratelimit {
+   rate_limit {
        match header X-Defender-RateLimit true
        rate 2r/s
    }
