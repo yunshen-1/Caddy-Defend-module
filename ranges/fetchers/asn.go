@@ -62,6 +62,17 @@ func (f ASNFetcher) FetchIPRanges() ([]string, error) {
 
 // NewASNFetcher creates a new ASNFetcher with the specified ASNs.
 func NewASNFetcher(asns []string) *ASNFetcher {
+	// validate ASNs
+	if len(asns) == 0 {
+		return nil
+	}
+	for _, asn := range asns {
+		if !strings.HasPrefix(asn, "AS") || len(asn) != 6 {
+			panic(fmt.Sprintf("invalid ASN: %s", asn))
+			return nil
+		}
+	}
+
 	return &ASNFetcher{
 		ASNs: asns,
 	}
