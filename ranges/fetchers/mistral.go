@@ -19,7 +19,7 @@ func (f MistralFetcher) Description() string {
 }
 
 func (f MistralFetcher) FetchIPRanges() ([]string, error) {
-	url := "https://mistral.ai/mistralai-user-ips.json"
+	const url = "https://mistral.ai/mistralai-user-ips.json"
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch Mistral IP ranges: %v", err)

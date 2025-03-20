@@ -25,7 +25,7 @@ type IPRanges struct {
 
 // fetchAWSIPRanges fetches and parses the AWS IP ranges JSON file.
 func fetchAWSIPRanges(region, service string) ([]string, error) {
-	url := "https://ip-ranges.amazonaws.com/ip-ranges.json"
+	const url = "https://ip-ranges.amazonaws.com/ip-ranges.json"
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch AWS IP ranges from %s: %v", url, err)

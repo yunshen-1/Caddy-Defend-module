@@ -27,6 +27,9 @@ func main() {
 
 	// Create an array of all IP range fetchers
 	fetchersList := []fetchers.IPRangeFetcher{
+		fetchers.VPNFetcher{},                  // Known VPN services
+		fetchers.LinodeFetcher{},               // Linode
+		fetchers.DigitalOceanFetcher{},         // Digital Ocean
 		fetchers.OpenAIFetcher{},               // OpenAI services
 		fetchers.DeepSeekFetcher{},             // DeepSeek
 		fetchers.OracleFetcher{},               // Oracle Cloud
@@ -36,10 +39,29 @@ func main() {
 		aws.AWSFetcher{},                       // Global AWS IP ranges
 		aws.RegionFetcher{Region: "us-east-1"}, // us-east-1 region
 		aws.RegionFetcher{Region: "us-west-1"}, // us-west-1 region
-		aws.RegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
-		fetchers.PrivateFetcher{},              // Private IP ranges (RFC 1918)
-		fetchers.AllFetcher{},                  // All IP ranges
-		fetchers.MistralFetcher{},              // Mistral IP ranges
+		// aws.RegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
+		fetchers.PrivateFetcher{},    // Private IP ranges (RFC 1918)
+		fetchers.AllFetcher{},        // All IP ranges
+		fetchers.MistralFetcher{},    // Mistral IP ranges
+		fetchers.VultrFetcher{},      // Vultr Cloud IP ranges
+		fetchers.CloudflareFetcher{}, // Cloudflare IP ranges
+		// the issue with the tor fetcher is that TOR is a network of individual nodes,
+		// so it's not possible to get a list of all IP ranges. The current solution
+		// converts individual nodes to IP ranges.
+		// fetchers.TorFetcher{}, // Tor exit nodes
+		// ASN fetcher with common cloud providers and AI companies
+		/* todo: figure some way to implement this where the user specifies the ranges to fetch */
+		// fetchers.NewASNFetcher([]string{
+		//	"AS13335", // Cloudflare
+		//	"AS16509", // Amazon AWS
+		//	"AS8075",  // Microsoft
+		//	"AS15169", // Google
+		//	"AS54113", // Fastly
+		//	"AS19551", // Incapsula
+		//	"AS14061", // DigitalOcean
+		//	"AS63949", // Linode
+		//	"AS14618", // Amazon
+		// }),
 	}
 
 	// Load the existing IP ranges from the data package
@@ -90,7 +112,14 @@ func main() {
 		log.Fatalf("Invalid output format: %s. Use 'json' or 'go'", outputFormat)
 	}
 
-	fmt.Printf("\n🎉 All IP ranges have been successfully written to %s\n", outputFile)
+	// calculate total number of IP ranges
+
+	var totalRanges int
+	for _, ranges := range ipRanges {
+		totalRanges += len(ranges)
+	}
+
+	fmt.Printf("🎉 All %d IP ranges have been successfully written to %s\n", totalRanges, outputFile)
 }
 
 // writeJSON writes the IP ranges to a JSON file.
