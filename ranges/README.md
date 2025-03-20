@@ -26,6 +26,7 @@ The **Fetchers Module** is a Go package designed to fetch IP ranges for various 
 | `GithubCopilotFetcher` | Fetches IP ranges for GitHub Copilot services.                   |
 | `AllFetcher`           | Fetches IP ranges for all IP adders.                             |
 | `PrivateFetcher`       | Fetches IP ranges for private network ranges (used for testing). |
+| `MistralFetcher`       | Fetches IP ranges for Mistral services.                          |
 
 ---
 
@@ -57,6 +58,11 @@ func main() {
 	// Access pregenerated IP ranges for OpenAI
 	openaiRanges := data.IPRanges["openai"]
 	fmt.Println("OpenAI IP ranges:", openaiRanges)
+
+	// Access pregenerated IP ranges for Mistral
+	mistralRanges := data.IPRanges["mistral"]
+	fmt.Println("Mistral IP ranges:", mistralRanges)
+    // ...
 }
 ```
 
@@ -75,6 +81,7 @@ The `IPRanges` map in the `data` package contains the following keys:
 | `oci`           | IP ranges for Oracle Cloud Infrastructure (OCI) services |
 | `githubcopilot` | IP ranges for GitHub Copilot services.                   |
 | `private`       | IP ranges for private networks (used for testing).       |
+| `mistral`       | IP ranges for Mistral services.                          |
 
 ### Regenerating Pregenerated Results
 
@@ -141,13 +148,13 @@ The Fetchers Module is integrated into the **Caddy Defender** middleware. To use
 ```caddyfile
 localhost:8080 {
     defender block {
-        ranges aws gcloud openai
+        ranges aws gcloud openai mistral
     }
     respond "Hello, world!"
 }
 ```
 
-This configuration blocks requests from IP ranges associated with AWS, GCP, and OpenAI.
+This configuration blocks requests from IP ranges associated with AWS, GCP, OpenAI, and Mistral.
 
 ---
 
