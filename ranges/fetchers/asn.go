@@ -33,6 +33,9 @@ func (f ASNFetcher) FetchIPRanges() ([]string, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to fetch IP ranges for ASN %s: %v", asn, err)
 		}
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("received non-200 status code %d for ASN %s", resp.StatusCode, asn)
+		}
 
 		body, err := io.ReadAll(resp.Body)
 		resp.Body.Close()
