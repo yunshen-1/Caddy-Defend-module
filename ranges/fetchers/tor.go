@@ -40,7 +40,7 @@ func (f TorFetcher) FetchIPRanges() ([]string, error) {
 		return nil, fmt.Errorf("failed to read header from Tor exit nodes CSV: %v", err)
 	}
 
-	var ipRanges []string
+	var ipRanges = make([]string, resp.ContentLength/4) // 4 bytes per IP address (assuming ipv4)
 
 	// Read the rest of the records
 	for {
