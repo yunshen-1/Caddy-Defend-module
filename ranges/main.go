@@ -39,7 +39,7 @@ func main() {
 		aws.AWSFetcher{},                       // Global AWS IP ranges
 		aws.RegionFetcher{Region: "us-east-1"}, // us-east-1 region
 		aws.RegionFetcher{Region: "us-west-1"}, // us-west-1 region
-		//aws.RegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
+		// aws.RegionFetcher{Region: "eu-west-1"}, // eu-west-1 region
 		fetchers.PrivateFetcher{},    // Private IP ranges (RFC 1918)
 		fetchers.AllFetcher{},        // All IP ranges
 		fetchers.MistralFetcher{},    // Mistral IP ranges
@@ -48,9 +48,10 @@ func main() {
 		// the issue with the tor fetcher is that TOR is a network of individual nodes,
 		// so it's not possible to get a list of all IP ranges. The current solution
 		// converts individual nodes to IP ranges.
-		//fetchers.TorFetcher{}, // Tor exit nodes
+		// fetchers.TorFetcher{}, // Tor exit nodes
 		// ASN fetcher with common cloud providers and AI companies
-		//fetchers.NewASNFetcher([]string{ /* todo: figure some way to implement this where the user specifies the ranges to fetch */
+		/* todo: figure some way to implement this where the user specifies the ranges to fetch */
+		// fetchers.NewASNFetcher([]string{
 		//	"AS13335", // Cloudflare
 		//	"AS16509", // Amazon AWS
 		//	"AS8075",  // Microsoft
@@ -60,7 +61,7 @@ func main() {
 		//	"AS14061", // DigitalOcean
 		//	"AS63949", // Linode
 		//	"AS14618", // Amazon
-		//}),
+		// }),
 	}
 
 	// Load the existing IP ranges from the data package

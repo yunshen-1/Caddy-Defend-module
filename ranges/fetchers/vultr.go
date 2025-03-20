@@ -32,7 +32,6 @@ func (f VultrFetcher) FetchIPRanges() ([]string, error) {
 
 	var result struct {
 		Description string `json:"description"`
-		ASN         int    `json:"asn"`
 		Email       string `json:"email"`
 		Updated     string `json:"updated"`
 		Subnets     []struct {
@@ -42,6 +41,7 @@ func (f VultrFetcher) FetchIPRanges() ([]string, error) {
 			City       string `json:"city"`
 			PostalCode string `json:"postal_code"`
 		} `json:"subnets"`
+		ASN int `json:"asn"`
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {

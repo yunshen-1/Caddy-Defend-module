@@ -29,7 +29,7 @@ func (f ASNFetcher) FetchIPRanges() ([]string, error) {
 
 	for _, asn := range f.ASNs {
 		url := fmt.Sprintf("https://api.hackertarget.com/aslookup/?q=%s", asn)
-		resp, err := http.Get(url)
+		resp, err := http.Get(url) // #nosec:disable G107 -- False positive
 		if err != nil {
 			return nil, fmt.Errorf("failed to fetch IP ranges for ASN %s: %v", asn, err)
 		}
@@ -69,7 +69,6 @@ func NewASNFetcher(asns []string) *ASNFetcher {
 	for _, asn := range asns {
 		if !strings.HasPrefix(asn, "AS") || len(asn) != 6 {
 			panic(fmt.Sprintf("invalid ASN: %s", asn))
-			return nil
 		}
 	}
 

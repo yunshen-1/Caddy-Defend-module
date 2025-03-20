@@ -31,11 +31,11 @@ func (f CloudflareFetcher) FetchIPRanges() ([]string, error) {
 	}
 
 	var result struct {
-		Success bool `json:"success"`
-		Result  struct {
+		Result struct {
 			IPv4CIDRs []string `json:"ipv4_cidrs"`
 			IPv6CIDRs []string `json:"ipv6_cidrs"`
 		} `json:"result"`
+		Success bool `json:"success"`
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
