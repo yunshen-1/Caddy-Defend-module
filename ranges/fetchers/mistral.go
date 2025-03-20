@@ -24,6 +24,12 @@ func (f MistralFetcher) FetchIPRanges() ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch Mistral IP ranges: %v", err)
 	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code from Mistral: %d", resp.StatusCode)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch Mistral IP ranges: %v", err)
+	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
