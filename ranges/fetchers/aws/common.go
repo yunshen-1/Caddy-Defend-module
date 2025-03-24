@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-// AWSIPRanges represents the structure of the AWS IP ranges JSON file.
+// IPRanges represents the structure of the AWS IP ranges JSON file.
 type IPRanges struct {
 	SyncToken  string `json:"syncToken"`
 	CreateDate string `json:"createDate"`
