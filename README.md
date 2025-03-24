@@ -105,6 +105,7 @@ The plugin includes predefined IP ranges for popular AI services. These ranges a
 
 |                               Service                                |                     Key                     |                     IP Ranges                      |
 |:--------------------------------------------------------------------:|:-------------------------------------------:|:--------------------------------------------------:|
+|                              Alibaba Cloud                          |                    aliyun                   |       [aliyun.go](ranges/fetchers/aliyun.go)       |
 |                                 VPNs                                 |                     vpn                     |          [vpn.go](ranges/fetchers/vpn.go)          |
 |                                 AWS                                  |                     aws                     |        [aws.go](ranges/fetchers/aws/aws.go)        |
 |                              AWS Region                              | aws-us-east-1, aws-us-west-1, aws-eu-west-1 | [aws_region.go](ranges/fetchers/aws/aws_region.go) |
