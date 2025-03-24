@@ -49,10 +49,10 @@ func (f AliyunFetcher) FetchIPRanges() ([]string, error) {
 
 	// Configure a flexible CSV reader
 	reader := csv.NewReader(&dataBuffer)
-	reader.FieldsPerRecord = -1  // Allow variable number of fields
+	reader.FieldsPerRecord = -1 // Allow variable number of fields
 	reader.TrimLeadingSpace = true
-	reader.LazyQuotes = true     // Be flexible with quoting
-	reader.Comment = '#'         // Skip comment lines (as additional protection)
+	reader.LazyQuotes = true // Be flexible with quoting
+	reader.Comment = '#'     // Skip comment lines (as additional protection)
 
 	// Preallocate the slice with an estimated size
 	ipRanges := make([]string, 0, 1700)
@@ -65,7 +65,7 @@ func (f AliyunFetcher) FetchIPRanges() ([]string, error) {
 		if err != nil {
 			return nil, fmt.Errorf("error parsing Alibaba Cloud CSV data: %v", err)
 		}
-		
+
 		// Extract the IP range from the first field if available
 		if len(record) > 0 && record[0] != "" {
 			ipRange := strings.TrimSpace(record[0])
