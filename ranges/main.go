@@ -4,14 +4,15 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers/aws"
 	"log"
 	"os"
 	"strings"
 	"sync"
 	"text/template"
+
+	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
+	"github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers"
+	"github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers/aws"
 )
 
 var (
@@ -45,6 +46,7 @@ func main() {
 		fetchers.MistralFetcher{},    // Mistral IP ranges
 		fetchers.VultrFetcher{},      // Vultr Cloud IP ranges
 		fetchers.CloudflareFetcher{}, // Cloudflare IP ranges
+		fetchers.AliyunFetcher{},     // Aliyun IP ranges
 		// the issue with the tor fetcher is that TOR is a network of individual nodes,
 		// so it's not possible to get a list of all IP ranges. The current solution
 		// converts individual nodes to IP ranges.
