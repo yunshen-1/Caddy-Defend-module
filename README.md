@@ -15,6 +15,7 @@ The **Caddy Defender** plugin is a middleware for Caddy that allows you to block
   - **Drop**: Drops the connection.
   - **Garbage**: Return garbage data to pollute AI training.
   - **Redirect**: Return a `308 Permanent Redirect` response with a custom URL.
+  - **Ratelimit**: Ratelimit requests, configurable via [caddy-ratelimit](https://github.com/mholt/caddy-ratelimit).
   - **Tarpit**: Stream data at a slow, but configurable rate to stall bots and pollute AI training.
 
 ---
