@@ -17,17 +17,7 @@ The **Fetchers Module** is a Go package designed to fetch IP ranges for various 
 
 ## Supported Fetchers
 
-| Fetcher Name           | Description                                                      |
-|------------------------|------------------------------------------------------------------|
-| `AWSFetcher`           | Fetches global IP ranges for AWS services.                       |
-| `AWSRegionFetcher`     | Fetches IP ranges for a specific AWS region (e.g., `us-east-1`). |
-| `Alibaba Cloud`        | Fetches IP ranges for Alibaba Cloud services (aliyun)            |
-| `GCloudFetcher`        | Fetches IP ranges for Google Cloud Platform (GCP) services.      |
-| `OpenAIFetcher`        | Fetches IP ranges for OpenAI services (e.g., ChatGPT, GPTBot).   |
-| `GithubCopilotFetcher` | Fetches IP ranges for GitHub Copilot services.                   |
-| `AllFetcher`           | Fetches IP ranges for all IP adders.                             |
-| `PrivateFetcher`       | Fetches IP ranges for private network ranges (used for testing). |
-| `MistralFetcher`       | Fetches IP ranges for Mistral services.                          |
+Please see [the readme](https://github.com/JasonLovesDoggo/caddy-defender#embedded-ip-ranges)
 
 ---
 
