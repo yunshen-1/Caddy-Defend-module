@@ -1,6 +1,9 @@
 site_name: Caddy Defender Docs
-theme:
-  name: mkdocs
+theme: material
+repo_url: https://github.com/JasonLovesDoggo/caddy-defender
+site_url: https://defender.jasonlovesdoggo.dev
+site_description: The Caddy Defender documentation site.
+site_author: Jason Cameron
 nav:
   - Home: index.md
   - Getting Started: intro.md
