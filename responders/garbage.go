@@ -2,10 +2,11 @@
 package responders
 
 import (
-	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 	"math/rand/v2"
 	"net/http"
 	"strings"
+
+	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 )
 
 // GarbageResponder returns garbage data to the client.

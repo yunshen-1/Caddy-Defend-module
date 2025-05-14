@@ -8,8 +8,8 @@ import (
 
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddytest"
-	"github.com/jasonlovesdoggo/caddy-defender/responders"
-	"github.com/jasonlovesdoggo/caddy-defender/responders/tarpit"
+	"pkg.jsn.cam/caddy-defender/responders"
+	"pkg.jsn.cam/caddy-defender/responders/tarpit"
 
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/stretchr/testify/require"
