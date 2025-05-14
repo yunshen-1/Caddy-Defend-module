@@ -9,10 +9,10 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/jasonlovesdoggo/caddy-defender/matchers/ip"
-	"github.com/jasonlovesdoggo/caddy-defender/responders"
-	"github.com/jasonlovesdoggo/caddy-defender/responders/tarpit"
 	"go.uber.org/zap"
+	"pkg.jsn.cam/caddy-defender/matchers/ip"
+	"pkg.jsn.cam/caddy-defender/responders"
+	"pkg.jsn.cam/caddy-defender/responders/tarpit"
 )
 
 func init() {

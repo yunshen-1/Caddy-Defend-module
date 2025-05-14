@@ -2,7 +2,7 @@
 
 
 ```azure
-pkg: github.com/jasonlovesdoggo/caddy-defender/benchmarks/random
+pkg: pkg.jsn.cam/caddy-defender/benchmarks/random
 cpu: AMD Ryzen 5 7600X 6-Core Processor             
 BenchmarkIPToAddrFastIPv4
 BenchmarkIPToAddrFastIPv4-12        	194402377	         6.154 ns/op

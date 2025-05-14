@@ -8,9 +8,9 @@ import (
 
 	"go.uber.org/zap/zapcore"
 
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
+	"pkg.jsn.cam/caddy-defender/ranges/data"
 )
 
 // Test data

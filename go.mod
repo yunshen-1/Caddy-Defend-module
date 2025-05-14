@@ -1,4 +1,4 @@
-module github.com/jasonlovesdoggo/caddy-defender
+module pkg.jsn.cam/caddy-defender
 
 go 1.23.6
 

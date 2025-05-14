@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/jasonlovesdoggo/caddy-defender/cache"
+	"pkg.jsn.cam/caddy-defender/cache"
 )
 
 // HTTPReader implements the ContentReader interface and reads remote files over http.

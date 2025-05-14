@@ -34,7 +34,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
+	"pkg.jsn.cam/caddy-defender/ranges/data"
 )
 
 func main() {
@@ -98,7 +98,7 @@ This will fetch the latest IP ranges from all supported services and update the 
 To use the Fetchers Module in your Go project, install it using `go get`:
 
 ```bash
-go get github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers
+go get pkg.jsn.cam/caddy-defender/ranges/fetchers
 ```
 
 ---
@@ -114,7 +114,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/fetchers"
+	"pkg.jsn.cam/caddy-defender/ranges/fetchers"
 )
 
 func main() {

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jasonlovesdoggo/caddy-defender/cache"
+	"pkg.jsn.cam/caddy-defender/cache"
 )
 
 // Helper function to create a new responder

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/jasonlovesdoggo/caddy-defender/cache"
+	"pkg.jsn.cam/caddy-defender/cache"
 )
 
 // ContentReader is an interface for fetching data from different data Contents to supply data to the tarpit.

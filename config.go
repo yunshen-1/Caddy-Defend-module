@@ -14,10 +14,10 @@ import (
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/jasonlovesdoggo/caddy-defender/matchers/whitelist"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
-	"github.com/jasonlovesdoggo/caddy-defender/responders"
-	"github.com/jasonlovesdoggo/caddy-defender/responders/tarpit"
+	"pkg.jsn.cam/caddy-defender/matchers/whitelist"
+	"pkg.jsn.cam/caddy-defender/ranges/data"
+	"pkg.jsn.cam/caddy-defender/responders"
+	"pkg.jsn.cam/caddy-defender/responders/tarpit"
 )
 
 var responderTypes = []string{"block", "custom", "drop", "garbage", "ratelimit", "redirect", "tarpit"}

@@ -3,15 +3,16 @@ package ip
 import (
 	"context"
 	"fmt"
-	Whitelist "github.com/jasonlovesdoggo/caddy-defender/matchers/whitelist"
 	"net"
 	"net/netip"
 	"time"
 
+	Whitelist "pkg.jsn.cam/caddy-defender/matchers/whitelist"
+
 	"github.com/gaissmai/bart"
-	"github.com/jasonlovesdoggo/caddy-defender/ranges/data"
 	"github.com/viccon/sturdyc"
 	"go.uber.org/zap"
+	"pkg.jsn.cam/caddy-defender/ranges/data"
 )
 
 type IPChecker struct {

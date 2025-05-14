@@ -39,7 +39,7 @@ go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 Run the following command to build Caddy with the Caddy Defender plugin:
 
 ```bash
-xcaddy build --with github.com/jasonlovesdoggo/caddy-defender
+xcaddy build --with pkg.jsn.cam/caddy-defender
 ```
 
 This will produce a `caddy` binary in the current directory.
