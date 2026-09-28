@@ -1,3 +1,6 @@
+> **Note / 声明:** This repository is based on the open-source project JasonLovesDoggo/caddy-defender ( https://github.com/JasonLovesDoggo/caddy-defender , MIT License ). It is self-hosted and maintained by me for personal defensive use and study. Original copyright belongs to the upstream author(s).
+> 本仓库基于开源项目 JasonLovesDoggo/caddy-defender（MIT 许可），由本人自建部署，用于个人防御用途与学习，原始版权归原作者所有。
+
 ## **Caddy Defender Plugin**
 
 The **Caddy Defender** plugin is a middleware for Caddy that allows you to block or manipulate requests based on the client's IP address. It is particularly useful for preventing unwanted traffic or polluting AI training data by returning garbage responses.
